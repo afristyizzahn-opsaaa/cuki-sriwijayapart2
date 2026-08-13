@@ -1,0 +1,264 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Georgia, serif;
+  color: #f3e5ab;
+  background: #2b1b17;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  color: #f3e5ab;
+  background: #2b1b17;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.hero-portal::after {
+  position: absolute;
+  inset: auto 8% 9% auto;
+  z-index: -10;
+  width: min(44vw, 520px);
+  height: min(44vw, 520px);
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.18), transparent 66%);
+  content: '';
+  filter: blur(18px);
+  pointer-events: none;
+}
+
+.golden-light {
+  background:
+    radial-gradient(circle at 50% 0%, rgba(245, 230, 200, 0.14), transparent 34%),
+    linear-gradient(
+      90deg,
+      rgba(212, 175, 55, 0.04) 0%,
+      rgba(212, 175, 55, 0.12) 24%,
+      rgba(245, 230, 200, 0.14) 50%,
+      rgba(212, 175, 55, 0.12) 76%,
+      rgba(212, 175, 55, 0.04) 100%
+    );
+  animation: golden-light-move 14s ease-in-out infinite alternate;
+  filter: blur(10px);
+}
+
+.golden-sheen {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(212, 175, 55, 0.16) 0%,
+      rgba(212, 175, 55, 0.08) 18%,
+      rgba(8, 7, 6, 0.02) 36%,
+      rgba(8, 7, 6, 0) 100%
+    ),
+    radial-gradient(circle at 72% 42%, rgba(212, 175, 55, 0.1), transparent 24%),
+    radial-gradient(circle at 18% 18%, rgba(245, 230, 200, 0.06), transparent 18%);
+  pointer-events: none;
+}
+
+.hero-content {
+  animation: hero-fade-in 900ms ease-out both;
+}
+
+.hero-logo-float {
+  animation:
+    hero-fade-in 900ms ease-out 120ms both,
+    logo-float 5s ease-in-out infinite;
+}
+
+.cuki-logo-orbit::before,
+.cuki-logo-orbit::after {
+  position: absolute;
+  border-radius: inherit;
+  content: '';
+  pointer-events: none;
+}
+
+.cuki-logo-orbit::before {
+  inset: -1px;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  box-shadow:
+    0 0 46px rgba(212, 175, 55, 0.2),
+    inset 0 0 42px rgba(212, 175, 55, 0.08);
+}
+
+.cuki-logo-orbit::after {
+  inset: 16%;
+  border: 1px solid rgba(245, 230, 200, 0.12);
+  transform: rotate(8deg);
+}
+
+@keyframes hero-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes logo-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes golden-light-move {
+  from {
+    transform: translateX(-4%) skewX(-6deg);
+  }
+  to {
+    transform: translateX(4%) skewX(-6deg);
+  }
+}
+
+/* The board reproduces the four coloured territories of the physical CUKI board.
+   Gameplay still uses the overlaid 11 × 11 intersections. */
+.cuki-board {
+  border: clamp(4px, 0.75vw, 8px) solid #d7ad57;
+  background: #17212c;
+  padding: 6%;
+  box-shadow:
+    inset 0 0 0 clamp(2px, 0.35vw, 4px) #09111a,
+    0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.cuki-board::before {
+  position: absolute;
+  inset: 1.3%;
+  z-index: 0;
+  border: 1px solid rgba(255, 232, 159, 0.85);
+  content: '';
+  pointer-events: none;
+}
+
+.cuki-board-grid {
+  position: relative;
+  z-index: 1;
+  gap: clamp(1px, 0.3vw, 3px);
+  border: clamp(1px, 0.25vw, 3px) solid #111922;
+  background: #111922;
+}
+
+.cuki-board-cell {
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid rgba(17, 25, 34, 0.75);
+  border-radius: clamp(3px, 0.7vw, 9px);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.cuki-terrain-yellow {
+  background: #f5e69f;
+}
+.cuki-terrain-blue {
+  background: #9dcce1;
+}
+.cuki-terrain-green {
+  background: #a7ce96;
+}
+.cuki-terrain-orange {
+  background: #dfa073;
+}
+
+.cuki-board-ruler {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  color: #f6cf73;
+  font-family: Georgia, serif;
+  font-size: clamp(6px, 1.2vw, 13px);
+  font-weight: 700;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.cuki-board-ruler-top,
+.cuki-board-ruler-bottom {
+  right: 7.3%;
+  left: 7.3%;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  text-align: center;
+}
+
+.cuki-board-ruler-top {
+  top: 1.9%;
+}
+.cuki-board-ruler-bottom {
+  bottom: 1.9%;
+}
+
+.cuki-board-ruler-left,
+.cuki-board-ruler-right {
+  top: 7.2%;
+  bottom: 7.2%;
+  grid-template-rows: repeat(10, minmax(0, 1fr));
+  align-items: center;
+  text-align: center;
+}
+
+.cuki-board-ruler-left {
+  left: 2%;
+}
+.cuki-board-ruler-right {
+  right: 2%;
+}
+
+.cuki-intersection {
+  background: transparent;
+  box-shadow: none;
+}
+
+.cuki-center-logo {
+  border: 2px solid #d7ad57;
+  border-radius: 0.7rem;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(245, 191, 0, 0.52) 0 15%, transparent 16%),
+    linear-gradient(145deg, #fff8d9, #ecd388);
+  color: #513514;
+  transform: rotate(-2deg);
+}
+
+/* Tokens must remain real circles even when the board is scaled down. */
+.cuki-round-token,
+.cuki-round-hitbox,
+.cuki-round-pawn {
+  aspect-ratio: 1 / 1;
+  flex: 0 0 auto;
+  max-width: none;
+  max-height: none;
+}
+
+.cuki-round-token {
+  display: block;
+  width: clamp(16px, 3vw, 32px);
+  height: clamp(16px, 3vw, 32px);
+}
+
+.cuki-round-hitbox {
+  display: grid;
+  width: clamp(36px, 6vw, 54px);
+  height: clamp(36px, 6vw, 54px);
+}
+
+.cuki-round-pawn {
+  width: clamp(36px, 7.2vw, 58px);
+  height: clamp(36px, 7.2vw, 58px);
+}
