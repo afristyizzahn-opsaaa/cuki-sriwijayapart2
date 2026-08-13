@@ -8,6 +8,7 @@ import { AuthPage } from './pages/AuthPage';
 import { GamePage } from './pages/GamePage';
 import { SetupPage } from './pages/SetupPage';
 import { MapPage } from './pages/MapPage';
+import { PlaySelectionPage } from './pages/PlaySelectionPage';
 import { ProductPage } from './pages/ProductPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { TreasuresPage } from './pages/TreasuresPage';
@@ -28,6 +29,7 @@ export default function App(): JSX.Element {
       <Route path="/" element={<WelcomePage />} />
       <Route path="/auth" element={<AuthPage />} />
       <Route path="/home" element={<HomePage />} />
+      <Route path="/play" element={<PlaySelectionPage />} />
       <Route
         path="/profile"
         element={
