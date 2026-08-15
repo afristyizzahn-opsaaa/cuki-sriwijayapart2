@@ -9,6 +9,8 @@ import type { PlayerAccount } from '../types/account';
 
 const asset = (path: string): string => `${import.meta.env.BASE_URL}${path}`;
 const gateVideoUrl = asset('assets/cuki-gate-transition.mp4');
+const videoExitFadeDurationMs = 1250;
+const videoExitFadeSeconds = videoExitFadeDurationMs / 1000;
 
 type GateIntroPhase = 'idle' | 'playing' | 'ended';
 
@@ -18,6 +20,7 @@ export function GateIntro(): JSX.Element {
   const navigate = useNavigate();
   const [phase, setPhase] = useState<GateIntroPhase>('idle');
   const [gateVideoReady, setGateVideoReady] = useState(false);
+  const [isVideoExiting, setIsVideoExiting] = useState(false);
   const activeAccount = useAccountStore((state) => state.activeAccount);
   const isAuthLoading = useAccountStore((state) => state.isAuthLoading);
   const logoutAccount = useAccountStore((state) => state.logoutAccount);
@@ -70,6 +73,8 @@ export function GateIntro(): JSX.Element {
     }
 
     hasStartedRef.current = true;
+    video.currentTime = 0;
+    setIsVideoExiting(false);
     setPhase('playing');
   };
 
@@ -98,12 +103,23 @@ export function GateIntro(): JSX.Element {
         playsInline
         preload="auto"
         src={gateVideoUrl}
-        style={videoStyle(isPlaying, gateVideoReady)}
+        style={videoStyle(isPlaying, gateVideoReady, isVideoExiting)}
         onCanPlay={() => setGateVideoReady(true)}
         onLoadedData={() => setGateVideoReady(true)}
+        onTimeUpdate={(event) => {
+          const video = event.currentTarget;
+
+          if (!Number.isFinite(video.duration) || video.duration <= videoExitFadeSeconds) {
+            return;
+          }
+
+          if (video.duration - video.currentTime <= videoExitFadeSeconds) {
+            setIsVideoExiting(true);
+          }
+        }}
         onEnded={() => {
           setPhase('ended');
-          navigate('/home');
+          navigate('/home', { state: { fromGateIntro: true } });
         }}
         onError={(event) => console.error('GATE VIDEO FAILED', event.currentTarget.currentSrc)}
       />
@@ -233,9 +249,7 @@ export function GateIntro(): JSX.Element {
   );
 }
 
-function getAccountLabel(
-  account: PlayerAccount | null,
-): string | null {
+function getAccountLabel(account: PlayerAccount | null): string | null {
   if (!account) {
     return null;
   }
@@ -284,17 +298,24 @@ function imageStyle(isPlaying: boolean, gateVideoReady: boolean): CSSProperties 
   return {
     objectPosition: '50% 52%',
     opacity: revealVideo ? 0 : 1,
-    transform: isPlaying ? 'translate3d(-1.4%, -2.8%, 0) scale(1.11)' : 'translate3d(0, 0, 0) scale(1)',
-    transition:
-      'opacity 460ms ease-in-out 110ms, transform 720ms cubic-bezier(0.4, 0, 0.2, 1)',
+    transform: isPlaying
+      ? 'translate3d(-1.4%, -2.8%, 0) scale(1.11)'
+      : 'translate3d(0, 0, 0) scale(1)',
+    transition: 'opacity 460ms ease-in-out 110ms, transform 720ms cubic-bezier(0.4, 0, 0.2, 1)',
     willChange: 'opacity, transform',
   };
 }
 
-function videoStyle(isPlaying: boolean, gateVideoReady: boolean): CSSProperties {
+function videoStyle(
+  isPlaying: boolean,
+  gateVideoReady: boolean,
+  isVideoExiting: boolean,
+): CSSProperties {
   return {
-    opacity: isPlaying && gateVideoReady ? 1 : 0,
-    transition: 'opacity 460ms ease-in-out 110ms',
+    opacity: isPlaying && gateVideoReady && !isVideoExiting ? 1 : 0,
+    transition: isVideoExiting
+      ? `opacity ${videoExitFadeDurationMs}ms ease-out`
+      : 'opacity 460ms ease-in-out 110ms',
     willChange: 'opacity',
   };
 }

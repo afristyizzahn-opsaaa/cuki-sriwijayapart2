@@ -26,11 +26,11 @@ describe('public frontend pages', () => {
 
     const homeMarkup = renderPage(<HomePage />);
 
-    expect(homeMarkup).toContain('Warisan Sriwijaya');
+    expect(homeMarkup).toContain('Warisan Kesultanan Palembang Darussalam');
     expect(homeMarkup).toContain('Mulai Bermain');
-    expect(homeMarkup).toContain('Logo CUKI Sriwijaya');
-    expect(homeMarkup).toContain('Treasures Sriwijaya');
-    expect(homeMarkup).toContain('Main Game');
+    expect(homeMarkup).toContain('Logo CUKI Palembang Darussalam');
+    expect(homeMarkup).toContain('Khazanah Kesultanan');
+    expect(homeMarkup).toContain('Main Cuki');
 
     expect(renderPage(<MapPage />)).toContain('Nusantara Maritim');
     expect(renderPage(<TutorialPage />)).toContain('Tutorial CUKI');

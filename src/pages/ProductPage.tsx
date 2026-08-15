@@ -15,13 +15,19 @@ import type { LucideIcon } from 'lucide-react';
 import { KingdomShell } from '../components/layout/KingdomShell';
 import { Button } from '../components/ui/Button';
 
-const instagramUrl = 'https://www.instagram.com/';
-const tiktokUrl = 'https://www.tiktok.com/';
+import pempekImage from '../../assets/pempek.jpeg';
+import songketImage from '../../assets/kain songket.jpeg.webp';
+import maksubaImage from '../../assets/kue maksuba.jpeg';
+
+const instagramUrl =
+  'https://www.instagram.com/goc.sriwijaya?igsh=andmOWswZ2l1NzE3&igsi=andmOWswZ2l1NzE3';
+const tiktokUrl = 'https://www.tiktok.com/@gameofcuki?_r=1&_t=ZS-98uAHWve1Uy';
 
 interface ProductCardData {
   readonly category: string;
   readonly description: string;
   readonly icon: LucideIcon;
+  readonly image?: string;
   readonly isFeatured?: boolean;
   readonly name: string;
   readonly price: string;
@@ -41,6 +47,7 @@ const productCards: readonly ProductCardData[] = [
     category: 'Kuliner Ikonik',
     description: 'Makanan khas Palembang yang menjadi ikon kuliner Sumatera Selatan.',
     icon: Ship,
+    image: pempekImage,
     name: 'Pempek Palembang',
     price: 'Produk mitra budaya',
   },
@@ -48,6 +55,7 @@ const productCards: readonly ProductCardData[] = [
     category: 'Kain Tradisional',
     description: 'Kain tradisional penuh makna dan filosofi budaya.',
     icon: ShieldCheck,
+    image: songketImage,
     name: 'Songket Palembang',
     price: 'Produk mitra budaya',
   },
@@ -55,6 +63,7 @@ const productCards: readonly ProductCardData[] = [
     category: 'Warisan Kuliner',
     description: 'Warisan kuliner lokal yang terus dijaga.',
     icon: Heart,
+    image: maksubaImage,
     name: 'Kue Tradisional Sumatera Selatan',
     price: 'Produk mitra budaya',
   },
@@ -223,8 +232,21 @@ function ProductCard({ product }: { readonly product: ProductCardData }): JSX.El
       }`}
     >
       <div className="relative grid aspect-[4/3] place-items-center overflow-hidden rounded-2xl border border-primary-gold/20 bg-[radial-gradient(circle_at_50%_30%,rgba(212,175,55,0.16),rgba(74,39,24,0.34)_48%,rgba(8,7,6,0.62)_100%)]">
-        <div className="absolute inset-4 rounded-2xl border border-primary-gold/10" />
-        <Icon aria-hidden="true" className="relative h-16 w-16 text-primary-gold" />
+        {product.image ? (
+          <>
+            <img
+              alt={product.name}
+              className="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105"
+              src={product.image}
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,7,6,0.04),rgba(8,7,6,0.28))]" />
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-4 rounded-2xl border border-primary-gold/10" />
+            <Icon aria-hidden="true" className="relative h-16 w-16 text-primary-gold" />
+          </>
+        )}
       </div>
       <div className="mt-5 flex items-center justify-between gap-3">
         <span className="rounded-full border border-primary-gold/25 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-primary-gold">

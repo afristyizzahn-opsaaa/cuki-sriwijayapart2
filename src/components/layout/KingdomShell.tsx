@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
 import { PageContainer } from './PageContainer';
+import { PlaySelectorOverlay } from '../PlaySelectorOverlay';
 import { Button } from '../ui/Button';
 import { useAccountStore } from '../../stores/useAccountStore';
 
@@ -20,6 +22,7 @@ export function KingdomShell({
   variant = 'default',
 }: KingdomShellProps): JSX.Element {
   const isLanding = variant === 'landing';
+  const [showPlaySelector, setShowPlaySelector] = useState(false);
   const activeAccount = useAccountStore((state) => state.activeAccount);
 
   return (
@@ -37,9 +40,15 @@ export function KingdomShell({
           </Link>
           <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-x-2 gap-y-2 text-[0.68rem] font-semibold uppercase tracking-[0.08em] text-surface-parchment sm:gap-x-3 sm:text-xs sm:tracking-[0.1em]">
             <NavItem to="/home">Beranda</NavItem>
-            <NavItem to="/treasures">Treasures Sriwijaya</NavItem>
-            <NavItem to="/tutorial">Tutorial</NavItem>
-            <NavItem to="/game">Game</NavItem>
+            <NavItem to="/treasures">Khazanah Kesultanan</NavItem>
+            <NavItem to="/tutorial">Cara Bermain</NavItem>
+            <button
+              className={navItemClassName}
+              type="button"
+              onClick={() => setShowPlaySelector(true)}
+            >
+              Main Cuki
+            </button>
             <NavItem to="/product">Produk</NavItem>
             {activeAccount ? (
               <Button
@@ -84,9 +93,13 @@ export function KingdomShell({
           {children}
         </PageContainer>
       )}
+      {showPlaySelector ? <PlaySelectorOverlay onClose={() => setShowPlaySelector(false)} /> : null}
     </main>
   );
 }
+
+const navItemClassName =
+  'whitespace-nowrap rounded-full px-1.5 py-1 text-primary-gold/90 transition hover:text-primary-amber focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-amber';
 
 function NavItem({
   children,
@@ -96,10 +109,7 @@ function NavItem({
   readonly to: string;
 }): JSX.Element {
   return (
-    <Link
-      className="whitespace-nowrap rounded-full px-1.5 py-1 text-primary-gold/90 transition hover:text-primary-amber focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-amber"
-      to={to}
-    >
+    <Link className={navItemClassName} to={to}>
       {children}
     </Link>
   );

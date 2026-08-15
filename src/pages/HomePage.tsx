@@ -1,246 +1,128 @@
-import { useEffect, useState } from 'react';
-import { ExternalLink, X, BookOpen, Crown, Gamepad2, Sparkles } from 'lucide-react';
+import { useState } from 'react';
+import { BookOpen, Crown, Gamepad2, Sparkles } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
+import { PlaySelectorOverlay } from '../components/PlaySelectorOverlay';
 import { KingdomShell } from '../components/layout/KingdomShell';
 import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
-import { SCRATCH_GAME_URL } from '../constants/gameEntry';
 import { useGameStore } from '../stores/useGameStore';
 
 import heroBackground from '../../references/bacground cuki dekstop landing.jpeg';
 import cukiLogo from '../../references/logo_cuki_sriwijaya-removebg-preview.png';
 
 export function HomePage(): JSX.Element {
+  const location = useLocation();
   const hasSavedMatch = useGameStore((state) => state.gameState !== null);
   const [showPlaySelector, setShowPlaySelector] = useState(false);
-
-  useEffect(() => {
-    if (!showPlaySelector) {
-      return undefined;
-    }
-
-    const onKeyDown = (event: KeyboardEvent): void => {
-      if (event.key === 'Escape') {
-        setShowPlaySelector(false);
-      }
-    };
-
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [showPlaySelector]);
+  const shouldFadeInFromGate = Boolean(
+    (location.state as { fromGateIntro?: boolean } | null)?.fromGateIntro,
+  );
 
   return (
-    <KingdomShell title="Game of CUKI" variant="landing">
-      <section
-        aria-labelledby="landing-title"
-        className="hero-portal relative isolate min-h-screen overflow-hidden px-5 pb-8 pt-28 text-text-light sm:px-8 lg:px-12"
-      >
-        <img
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 -z-30 h-full w-full object-cover object-center"
-          src={heroBackground}
-        />
-        <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_74%_38%,rgba(212,175,55,0.24),transparent_30%),radial-gradient(circle_at_18%_16%,rgba(245,230,200,0.1),transparent_22%),linear-gradient(90deg,rgba(8,7,6,0.92)_0%,rgba(8,7,6,0.78)_40%,rgba(8,7,6,0.68)_64%,rgba(8,7,6,0.58)_100%)]" />
-        <div className="golden-light absolute inset-0 -z-10 opacity-60" />
-        <div className="golden-sheen absolute inset-0 -z-10" />
+    <div className={shouldFadeInFromGate ? 'gate-page-fade-in' : undefined}>
+      <KingdomShell title="Game of CUKI" variant="landing">
+        <section
+          aria-labelledby="landing-title"
+          className="hero-portal relative isolate min-h-screen overflow-hidden px-5 pb-8 pt-28 text-text-light sm:px-8 lg:px-12"
+        >
+          <img
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 -z-30 h-full w-full object-cover object-center"
+            src={heroBackground}
+          />
+          <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_74%_38%,rgba(212,175,55,0.24),transparent_30%),radial-gradient(circle_at_18%_16%,rgba(245,230,200,0.1),transparent_22%),linear-gradient(90deg,rgba(8,7,6,0.92)_0%,rgba(8,7,6,0.78)_40%,rgba(8,7,6,0.68)_64%,rgba(8,7,6,0.58)_100%)]" />
+          <div className="golden-light absolute inset-0 -z-10 opacity-60" />
+          <div className="golden-sheen absolute inset-0 -z-10" />
 
-        <div className="mx-auto flex min-h-[calc(100vh-7rem)] w-full max-w-content flex-col justify-center gap-12">
-          <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
-            <div className="hero-content max-w-3xl">
-              <span className="inline-flex items-center gap-2 rounded-full border border-primary-gold/45 bg-bg-dark/45 px-4 py-2 text-[0.82rem] font-bold uppercase tracking-[0.24em] text-primary-gold shadow-[0_0_22px_rgba(212,175,55,0.18)] backdrop-blur-md">
-                <Sparkles aria-hidden="true" className="h-4 w-4" />
-                Warisan Sriwijaya
-              </span>
-              <h1
-                id="landing-title"
-                className="mt-6 font-display text-[clamp(4rem,6.2vw,5.25rem)] font-semibold leading-[0.86] text-surface-parchment"
-              >
-                Game of
-                <span className="block text-[1.08em] text-primary-gold drop-shadow-[0_0_26px_rgba(212,175,55,0.28)]">
-                  CUKI
+          <div className="mx-auto flex min-h-[calc(100vh-7rem)] w-full max-w-content flex-col justify-center gap-12">
+            <div className="grid items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
+              <div className="hero-content max-w-3xl">
+                <span className="inline-flex items-center gap-2 rounded-full border border-primary-gold/45 bg-bg-dark/45 px-3.5 py-2 text-[0.72rem] font-bold uppercase tracking-[0.18em] text-primary-gold shadow-[0_0_22px_rgba(212,175,55,0.18)] backdrop-blur-md sm:px-4 sm:text-[0.82rem] sm:tracking-[0.24em]">
+                  <Sparkles aria-hidden="true" className="h-4 w-4" />
+                  Warisan Kesultanan Palembang Darussalam
                 </span>
-              </h1>
-              <p className="mt-5 max-w-[560px] text-[0.98rem] leading-[1.6] text-surface-parchment/90 sm:text-[1.05rem]">
-                Jelajahi keindahan budaya Palembang melalui permainan tradisional Cuki. Warisan
-                Kerajaan Sriwijaya kini hadir dalam bentuk digital yang interaktif dan menyenangkan.
-              </p>
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:gap-4">
-                <Button
-                  className="min-h-[3.25rem] rounded-full px-7 text-base shadow-[0_0_34px_rgba(212,175,55,0.3)]"
-                  onClick={() => setShowPlaySelector(true)}
+                <h1
+                  id="landing-title"
+                  className="mt-6 font-display text-[clamp(4rem,6.2vw,5.25rem)] font-semibold leading-[0.86] text-surface-parchment"
                 >
-                  Mulai Bermain
-                </Button>
-                <Button
-                  asChild
-                  className="min-h-[3.25rem] rounded-full border-primary-gold/55 bg-bg-dark/35 px-7 text-base backdrop-blur-md"
-                  variant="secondary"
-                >
-                  <Link to="/tutorial">Pelajari Dulu</Link>
-                </Button>
+                  Game of
+                  <span className="block text-[1.08em] text-primary-gold drop-shadow-[0_0_26px_rgba(212,175,55,0.28)]">
+                    CUKI
+                  </span>
+                </h1>
+                <p className="mt-5 max-w-[560px] text-[0.98rem] leading-[1.6] text-surface-parchment/90 sm:text-[1.05rem]">
+                  Jelajahi kekayaan budaya Palembang melalui permainan tradisional Cuki. Telusuri
+                  jejak sejarah dan warisan Kesultanan Palembang Darussalam dalam pengalaman
+                  digital yang interaktif dan menyenangkan.
+                </p>
+                <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:gap-4">
+                  <Button
+                    className="min-h-[3.25rem] rounded-full px-7 text-base shadow-[0_0_34px_rgba(212,175,55,0.3)]"
+                    onClick={() => setShowPlaySelector(true)}
+                  >
+                    Mulai Bermain
+                  </Button>
+                  <Button
+                    asChild
+                    className="min-h-[3.25rem] rounded-full border-primary-gold/55 bg-bg-dark/35 px-7 text-base backdrop-blur-md"
+                    variant="secondary"
+                  >
+                    <Link to="/tutorial">Pelajari Dulu</Link>
+                  </Button>
+                </div>
+                {hasSavedMatch ? (
+                  <Link
+                    className="mt-4 inline-flex text-sm font-semibold text-primary-gold underline decoration-primary-gold/35 underline-offset-4 transition hover:text-primary-amber"
+                    to="/game"
+                  >
+                    Lanjutkan permainan tersimpan
+                  </Link>
+                ) : null}
               </div>
-              {hasSavedMatch ? (
-                <Link
-                  className="mt-4 inline-flex text-sm font-semibold text-primary-gold underline decoration-primary-gold/35 underline-offset-4 transition hover:text-primary-amber"
-                  to="/game"
-                >
-                  Lanjutkan permainan tersimpan
-                </Link>
-              ) : null}
-            </div>
 
-            <div className="hero-logo-float justify-self-center lg:justify-self-end">
-              <div className="cuki-logo-orbit relative aspect-square w-[min(72vw,390px)] overflow-hidden rounded-full border border-primary-gold/35 bg-bg-dark/18 p-4 shadow-[0_0_70px_rgba(212,175,55,0.28)] backdrop-blur-sm sm:w-[min(54vw,420px)] sm:p-5">
-                <div className="absolute inset-4 rounded-full border border-primary-gold/20" />
-                <div className="grid h-full w-full place-items-center rounded-full border border-primary-gold/45 bg-[radial-gradient(circle_at_50%_35%,rgba(212,175,55,0.22),rgba(74,39,24,0.28)_48%,rgba(8,7,6,0.18)_100%)] p-3 sm:p-4">
-                  <img
-                    alt="Logo CUKI Sriwijaya"
-                    className="h-full w-full object-contain drop-shadow-[0_0_18px_rgba(212,175,55,0.28)]"
-                    src={cukiLogo}
-                  />
+              <div className="hero-logo-float justify-self-center lg:justify-self-end">
+                <div className="cuki-logo-orbit relative aspect-square w-[min(72vw,390px)] overflow-hidden rounded-full border border-primary-gold/35 bg-bg-dark/18 p-4 shadow-[0_0_70px_rgba(212,175,55,0.28)] backdrop-blur-sm sm:w-[min(54vw,420px)] sm:p-5">
+                  <div className="absolute inset-4 rounded-full border border-primary-gold/20" />
+                  <div className="grid h-full w-full place-items-center rounded-full border border-primary-gold/45 bg-[radial-gradient(circle_at_50%_35%,rgba(212,175,55,0.22),rgba(74,39,24,0.28)_48%,rgba(8,7,6,0.18)_100%)] p-3 sm:p-4">
+                    <img
+                      alt="Logo CUKI Palembang Darussalam"
+                      className="h-full w-full object-contain drop-shadow-[0_0_18px_rgba(212,175,55,0.28)]"
+                      src={cukiLogo}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
+
+            <section aria-label="Fitur CUKI" className="grid w-full gap-4 md:grid-cols-3 md:gap-5">
+              <FeatureCard
+                description="Jelajahi pusaka, sejarah, seni, tokoh, dan warisan Kesultanan Palembang Darussalam."
+                icon={Crown}
+                title="Khazanah Kesultanan"
+                to="/treasures"
+              />
+              <FeatureCard
+                description="Pelajari aturan dan cara bermain Cuki melalui panduan interaktif."
+                icon={BookOpen}
+                title="Cara Bermain"
+                to="/tutorial"
+              />
+              <FeatureCard
+                description="Masuki arena dan mainkan permainan tradisional Cuki secara digital."
+                icon={Gamepad2}
+                title="Main Cuki"
+                to="/setup"
+              />
+            </section>
           </div>
-
-          <section aria-label="Fitur CUKI" className="grid w-full gap-4 md:grid-cols-3 md:gap-5">
-            <FeatureCard
-              description="Buka arsip pusaka, sejarah Sriwijaya, dan badge warisan budaya."
-              icon={Crown}
-              title="Treasures Sriwijaya"
-              to="/treasures"
-            />
-            <FeatureCard
-              description="Pelajari cara bermain dengan panduan interaktif."
-              icon={BookOpen}
-              title="Tutorial"
-              to="/tutorial"
-            />
-            <FeatureCard
-              description="Masuk ke arena permainan digital Cuki."
-              icon={Gamepad2}
-              title="Main Game"
-              to="/setup"
-            />
-          </section>
-        </div>
-      </section>
-      {showPlaySelector ? (
-        <PlaySelectorOverlay onClose={() => setShowPlaySelector(false)} />
-      ) : null}
-    </KingdomShell>
-  );
-}
-
-function PlaySelectorOverlay({
-  onClose,
-}: {
-  readonly onClose: () => void;
-}): JSX.Element {
-  return (
-    <div
-      aria-modal="true"
-      className="fixed inset-0 z-[80] grid place-items-center bg-black/70 px-4 py-6 backdrop-blur-md"
-      role="dialog"
-      onClick={onClose}
-    >
-      <Card
-        className="relative w-full max-w-5xl border border-primary-gold/25 bg-[radial-gradient(circle_at_top,rgba(212,175,55,0.12),transparent_35%),linear-gradient(180deg,rgba(74,39,24,0.98),rgba(15,11,8,0.99))] shadow-[0_30px_90px_rgba(0,0,0,0.42)]"
-        variant="mahogany"
-        onClick={(event) => event.stopPropagation()}
-      >
-        <button
-          aria-label="Tutup pilihan game"
-          className="absolute right-4 top-4 inline-flex h-10 w-10 items-center justify-center rounded-full border border-primary-gold/25 text-primary-gold transition hover:bg-primary-gold/10 hover:text-primary-amber"
-          type="button"
-          onClick={onClose}
-        >
-          <X className="h-5 w-5" aria-hidden="true" />
-        </button>
-
-        <div className="pr-14">
-          <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary-amber">
-            Gameplay Gateway
-          </p>
-          <h2 className="mt-3 font-display text-3xl text-primary-gold md:text-4xl">
-            Choose Your CUKI Version
-          </h2>
-          <p className="mt-3 max-w-2xl text-sm leading-7 text-surface-parchment/78 md:text-base">
-            Pilih apakah kamu ingin main versi klasik Scratch atau lanjut ke versi web yang tersambung ke profil dan progress.
-          </p>
-        </div>
-
-        <div className="mt-7 grid gap-5 lg:grid-cols-2">
-          <PlayOptionCard
-            badge="CLASSIC"
-            cta="Main via Scratch"
-            description="Mainkan versi klasik CUKI yang sudah siap dimainkan."
-            external
-            href={SCRATCH_GAME_URL}
-            icon={Sparkles}
-            helper="Stable gameplay version. Open in a new tab."
-          />
-          <PlayOptionCard
-            badge="PROGRESS ENABLED"
-            cta="Main di Website"
-            description="Main langsung di website dan simpan progress permainanmu."
-            href="/setup"
-            icon={Gamepad2}
-            helper="Connected to your profile and Supabase progress."
-          />
-        </div>
-      </Card>
+        </section>
+        {showPlaySelector ? (
+          <PlaySelectorOverlay onClose={() => setShowPlaySelector(false)} />
+        ) : null}
+      </KingdomShell>
     </div>
-  );
-}
-
-function PlayOptionCard({
-  badge,
-  cta,
-  description,
-  external = false,
-  href,
-  helper,
-  icon: Icon,
-}: {
-  readonly badge: string;
-  readonly cta: string;
-  readonly description: string;
-  readonly external?: boolean;
-  readonly href: string;
-  readonly helper: string;
-  readonly icon: LucideIcon;
-}): JSX.Element {
-  return (
-    <article className="rounded-card border border-primary-gold/25 bg-bg-dark/60 p-5 shadow-[0_20px_58px_rgba(0,0,0,0.28)]">
-      <div className="flex items-start gap-4">
-        <div className="grid h-14 w-14 shrink-0 place-items-center rounded-full border border-primary-gold/25 bg-primary-gold/10 text-primary-gold">
-          <Icon className="h-7 w-7" aria-hidden="true" />
-        </div>
-        <div className="min-w-0">
-          <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary-amber">{badge}</p>
-          <p className="mt-2 text-sm leading-7 text-surface-parchment/78">{description}</p>
-          <p className="mt-2 text-xs uppercase tracking-[0.16em] text-text-muted">{helper}</p>
-        </div>
-      </div>
-      <div className="mt-5">
-        {external ? (
-          <Button asChild className="w-full" variant="primary">
-            <a href={href} rel="noreferrer" target="_blank">
-              {cta}
-              <ExternalLink className="h-4 w-4" aria-hidden="true" />
-            </a>
-          </Button>
-        ) : (
-          <Button asChild className="w-full" variant="primary">
-            <Link to={href}>{cta}</Link>
-          </Button>
-        )}
-      </div>
-    </article>
   );
 }
 

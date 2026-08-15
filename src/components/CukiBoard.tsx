@@ -27,6 +27,7 @@ export interface CukiBoardProps {
   readonly selectionEnabled?: boolean;
   readonly pawnInteractionEnabled?: boolean;
   readonly movementEnabled?: boolean;
+  readonly sizeVariant?: 'default' | 'compact';
 }
 
 /**
@@ -49,6 +50,7 @@ export function CukiBoard({
   selectionEnabled = true,
   pawnInteractionEnabled = false,
   movementEnabled = false,
+  sizeVariant = 'default',
 }: CukiBoardProps): JSX.Element {
   const [hoveredOpportunityId, setHoveredOpportunityId] = useState<string | null>(null);
   const offBoardPlayers = players
@@ -155,8 +157,12 @@ export function CukiBoard({
                       aria-label={`Capture legal Oncak group ${opportunity.id}`}
                       aria-pressed={selectedOpportunityId === opportunity.id}
                       className={`cuki-round-hitbox group relative grid shrink-0 place-items-center rounded-full transition duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-amber disabled:cursor-not-allowed ${
-                        isHoveredOpportunity || isSelectedOpportunity ? 'scale-110' : 'scale-100'
-                      }`}
+                        isHoveredOpportunity || isSelectedOpportunity
+                          ? sizeVariant === 'compact'
+                            ? 'scale-102'
+                            : 'scale-110'
+                          : 'scale-100'
+                      } ${sizeVariant === 'compact' ? 'h-4 w-4' : ''}`}
                       disabled={!selectionEnabled}
                       type="button"
                       onClick={() => selectOncak(opportunity.id, coordinate, onSelectOncak, onSelectOpportunity)}
@@ -173,7 +179,9 @@ export function CukiBoard({
                         aria-hidden="true"
                         className={`absolute inset-[-16%] rounded-full transition-all duration-200 ${
                           isHoveredOpportunity || isSelectedOpportunity
-                            ? 'scale-125 bg-primary-amber/20 blur-[2px]'
+                            ? sizeVariant === 'compact'
+                              ? 'scale-110 bg-primary-amber/18 blur-[1px]'
+                              : 'scale-125 bg-primary-amber/20 blur-[2px]'
                             : 'scale-100 bg-primary-amber/0'
                         }`}
                       />
@@ -183,7 +191,9 @@ export function CukiBoard({
                           isHoveredOpportunity
                             ? 'border-primary-amber/75 shadow-[0_0_0_6px_rgba(255,201,91,0.18)]'
                             : isSelectedOpportunity
-                              ? 'border-primary-amber/55 shadow-[0_0_0_4px_rgba(255,201,91,0.12)]'
+                              ? sizeVariant === 'compact'
+                                ? 'border-primary-amber/45 shadow-[0_0_0_2px_rgba(255,201,91,0.10)]'
+                                : 'border-primary-amber/55 shadow-[0_0_0_4px_rgba(255,201,91,0.12)]'
                               : 'border-transparent'
                         }`}
                       />
@@ -191,6 +201,7 @@ export function CukiBoard({
                         <IntersectionContent
                           intersection={intersection}
                           isSelected={sameCoordinate(coordinate, selectedOncakCoordinate) || isPreviewedOncak}
+                          sizeVariant={sizeVariant}
                         />
                       )}
                     </button>
@@ -199,17 +210,20 @@ export function CukiBoard({
                     onMovePawn ? (
                     <button
                       aria-label={`Move active pawn to ${boardLabel}`}
-                      className="cuki-round-hitbox shrink-0 cursor-pointer rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-amber disabled:cursor-not-allowed"
+                      className={`cuki-round-hitbox shrink-0 cursor-pointer rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-amber disabled:cursor-not-allowed ${
+                        sizeVariant === 'compact' ? 'h-4 w-4' : ''
+                      }`}
                       disabled={!movementEnabled}
                       type="button"
                       onClick={() => onMovePawn(coordinate)}
                     >
-                      <IntersectionContent intersection={intersection} isSelected={false} />
+                      <IntersectionContent intersection={intersection} isSelected={false} sizeVariant={sizeVariant} />
                     </button>
                   ) : isCapturedPreview ? null : (
                     <IntersectionContent
                       intersection={intersection}
                       isSelected={sameCoordinate(coordinate, selectedOncakCoordinate)}
+                      sizeVariant={sizeVariant}
                     />
                   )}
                 </div>
@@ -232,7 +246,9 @@ export function CukiBoard({
                   key={player.pawn.id}
                   data-testid={`pawn-${player.pawn.id}`}
                   data-board-coordinate={position ? coordinateToBoardLabel(position) : undefined}
-                  className="cuki-round-pawn absolute z-[15] -translate-x-1/2 -translate-y-1/2"
+                  className={`cuki-round-pawn absolute z-[15] -translate-x-1/2 -translate-y-1/2 ${
+                    sizeVariant === 'compact' ? 'h-5 w-5' : ''
+                  }`}
                   style={gridPositionStyle(position)}
                 >
                   <motion.button
@@ -293,18 +309,22 @@ function OffBoardPawnHolders({
 function IntersectionContent({
   intersection,
   isSelected,
+  sizeVariant,
 }: {
   readonly intersection: IntersectionBoard[number][number];
   readonly isSelected: boolean;
+  readonly sizeVariant: 'default' | 'compact';
 }): JSX.Element | null {
   if (intersection.kind !== 'ONCAK') return null;
   return (
     <span
       aria-label={`${intersection.oncak.color} Oncak at ${coordinateToBoardLabel(intersection.coordinate)}`}
-                      data-testid={`oncak-${intersection.oncak.id}`}
+      data-testid={`oncak-${intersection.oncak.id}`}
       data-board-coordinate={coordinateToBoardLabel(intersection.coordinate)}
       className={`cuki-round-token shrink-0 rounded-full border shadow-[0_1px_3px_rgba(0,0,0,0.8)] transition-transform duration-150 ${
-        isSelected ? 'scale-125' : 'scale-100'
+        isSelected ? (sizeVariant === 'compact' ? 'scale-105' : 'scale-125') : 'scale-100'
+      } ${
+        sizeVariant === 'compact' ? 'h-2 w-2' : 'h-4 w-4'
       } ${
         intersection.oncak.color === 'BLACK'
           ? 'border-primary-amber bg-black'
@@ -313,6 +333,7 @@ function IntersectionContent({
     />
   );
 }
+
 
 const PAWN_VISUALS = [
   'border-[#7654A8] bg-[#C8B4ED] text-[#3B2858]',

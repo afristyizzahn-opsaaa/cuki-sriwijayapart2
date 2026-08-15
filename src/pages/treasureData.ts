@@ -43,14 +43,14 @@ export interface TreasureProgress {
 export const treasureCollections: readonly TreasureCollection[] = [
   {
     id: 'royal',
-    title: 'Royal Collection',
-    subtitle: 'Simbol Kadatuan Sriwijaya',
-    theme: 'Sriwijaya Kingdom heritage',
-    content: ['Kadatuan Sriwijaya', 'Royal symbols', 'Historical artifacts'],
-    achievement: 'Royal Collection',
-    achievementDescription: 'Discover royal heritage archives.',
+    title: 'Koleksi Kesultanan',
+    subtitle: 'Simbol Kadatuan',
+    theme: 'WARISAN KESULTANAN PALEMBANG DARUSSALAM',
+    content: ['Kadatuan Sriwijaya', 'Simbol kerajaan', 'Artefak sejarah'],
+    achievement: 'Koleksi Kesultanan',
+    achievementDescription: 'Jelajahi arsip warisan kesultanan.',
     description:
-      'Masuki ruang pusaka kadatuan untuk mengenal simbol kerajaan, artefak istana, dan jejak kuasa Sriwijaya.',
+      'Jelajahi koleksi pusaka, simbol kesultanan, artefak istana, dan peninggalan yang merekam jejak Kesultanan Palembang Darussalam.',
     story: [
       'Kadatuan Sriwijaya dikenal sebagai pusat kekuasaan maritim yang menghubungkan sungai, pelabuhan, dan jalur niaga besar di Nusantara.',
       'Simbol kerajaan, benda upacara, dan peninggalan istana membantu kita membayangkan bagaimana wibawa Sriwijaya dibangun melalui perdagangan, diplomasi, dan ilmu pengetahuan.',
@@ -74,14 +74,14 @@ export const treasureCollections: readonly TreasureCollection[] = [
   },
   {
     id: 'ocean',
-    title: 'Ocean Explorer',
-    subtitle: 'Jalur Laut dan Pelabuhan',
-    theme: 'Sriwijaya maritime power',
+    title: 'Jejak Sungai Musi',
+    subtitle: 'Jalur Sungai dan Pelabuhan',
+    theme: 'JALUR PERDAGANGAN PALEMBANG',
     content: ['Maritime trade routes', 'Ships', 'Ports', 'Connection with international traders'],
-    achievement: 'Ocean Explorer',
-    achievementDescription: 'Complete maritime archives.',
+    achievement: 'Jejak Sungai Musi',
+    achievementDescription: 'Selesaikan arsip jalur perdagangan.',
     description:
-      'Telusuri jalur laut, pelabuhan, dan kapal dagang yang membuat Sriwijaya menjadi pusat maritim Asia Tenggara.',
+      'Telusuri Sungai Musi, pelabuhan, jalur perdagangan, dan hubungan antardaerah yang membentuk kehidupan Kesultanan Palembang Darussalam.',
     story: [
       'Sriwijaya tumbuh melalui kekuatan laut. Kapal, pelabuhan, dan penguasaan jalur perdagangan menjadikan kerajaan ini tempat singgah berbagai bangsa.',
       'Dari Selat Malaka sampai pesisir Sumatra, arus dagang membawa barang, bahasa, teknologi, dan gagasan yang membentuk wajah Nusantara.',
@@ -105,14 +105,14 @@ export const treasureCollections: readonly TreasureCollection[] = [
   },
   {
     id: 'knowledge',
-    title: 'Hidden Knowledge',
-    subtitle: 'Prasasti dan Bukti Sejarah',
-    theme: 'Historical discovery',
-    content: ['Historical facts', 'Archaeological evidence', 'Forgotten stories of Sriwijaya'],
-    achievement: 'Hidden Knowledge',
-    achievementDescription: 'Discover historical evidence.',
+    title: 'Pengetahuan Tersembunyi',
+    subtitle: 'Naskah dan Bukti Sejarah',
+    theme: 'PENELUSURAN SEJARAH',
+    content: ['Fakta sejarah', 'Bukti arkeologis', 'Kisah tersembunyi'],
+    achievement: 'Pengetahuan Tersembunyi',
+    achievementDescription: 'Temukan bukti sejarah.',
     description:
-      'Buka gulungan pengetahuan tentang prasasti, bukti arkeologis, dan kisah Sriwijaya yang lama tersembunyi.',
+      'Buka naskah, catatan, artefak, dan kisah sejarah untuk menelusuri pengetahuan yang tersimpan dari masa Kesultanan Palembang Darussalam.',
     story: [
       'Banyak kisah Sriwijaya ditemukan melalui prasasti, catatan perjalanan, dan penelitian arkeologis. Setiap bukti adalah potongan memori kerajaan.',
       'Pengetahuan yang tersembunyi ini membuat sejarah terasa seperti teka-teki: semakin banyak arsip dibuka, semakin jelas bentuk peradabannya.',
@@ -136,21 +136,21 @@ export const treasureCollections: readonly TreasureCollection[] = [
   },
   {
     id: 'harmony',
-    title: 'Nusantara Harmony',
-    subtitle: 'Jejak Akulturasi Islam Nusantara',
-    theme: 'Islamic Nusantara interaction',
+    title: 'Harmoni Nusantara',
+    subtitle: 'Jejak Akulturasi Nusantara',
+    theme: 'INTERAKSI ISLAM NUSANTARA',
     content: [
       'Muslim traders entering Nusantara',
       'Trade route cultural exchange',
       'Development of Islamic influence in Malay regions',
       'Cultural acculturation between local traditions and Islam',
     ],
-    achievement: 'Nusantara Harmony',
-    achievementDescription: 'Complete Islamic Nusantara interaction archives.',
+    achievement: 'Harmoni Nusantara',
+    achievementDescription: 'Selesaikan arsip interaksi Islam Nusantara.',
     description:
-      'Pelajari pertukaran budaya di jalur niaga: pedagang Muslim, wilayah Melayu, dan akulturasi tradisi lokal dengan Islam.',
+      'Pelajari hubungan perdagangan, penyebaran Islam, perjumpaan budaya, dan interaksi masyarakat Palembang dengan berbagai wilayah Nusantara.',
     story: [
-      'Sriwijaya menjadi pusat perdagangan maritim yang mempertemukan berbagai bangsa. Interaksi dengan pedagang Muslim membawa pertukaran budaya, ilmu pengetahuan, dan tradisi.',
+      'Perdagangan di jalur pelabuhan mempertemukan masyarakat Palembang dengan berbagai pedagang dan membawa pertukaran budaya, ilmu pengetahuan, dan tradisi.',
       'Melalui pelabuhan dan jalur niaga, pengaruh Islam berkembang perlahan di wilayah Melayu tanpa menghapus seluruh tradisi lokal. Dari pertemuan itu lahir akulturasi Nusantara.',
     ],
     facts: [
@@ -173,14 +173,14 @@ export const treasureCollections: readonly TreasureCollection[] = [
   },
   {
     id: 'culture',
-    title: 'Living Culture',
-    subtitle: 'Tradisi Palembang Hari Ini',
-    theme: 'Living heritage',
+    title: 'Warisan Hidup',
+    subtitle: 'Tradisi Palembang Masa Kini',
+    theme: 'WARISAN BUDAYA HIDUP',
     content: ['Palembang traditions', 'Local culture', 'Community heritage'],
-    achievement: 'Living Culture',
-    achievementDescription: 'Explore Palembang traditions.',
+    achievement: 'Warisan Hidup',
+    achievementDescription: 'Telusuri tradisi Palembang.',
     description:
-      'Rayakan warisan hidup Palembang melalui tradisi, komunitas, dan budaya lokal yang masih dijaga sampai sekarang.',
+      'Kenali tradisi, busana, seni, adat, dan warisan budaya Palembang yang terus hidup dan diwariskan hingga masa kini.',
     story: [
       'Warisan tidak hanya tersimpan di museum. Ia hidup dalam bahasa, makanan, upacara, permainan, dan kebiasaan masyarakat Palembang.',
       'Setiap tradisi yang dijaga oleh keluarga dan komunitas menjadi jembatan antara Sriwijaya masa lalu dengan generasi digital hari ini.',
@@ -204,14 +204,14 @@ export const treasureCollections: readonly TreasureCollection[] = [
   },
   {
     id: 'legacy',
-    title: 'CUKI Legacy',
-    subtitle: 'Pelestarian Permainan Tradisional',
-    theme: 'Traditional game preservation',
+    title: 'Warisan CUKI',
+    subtitle: 'Pelestarian CUKI Tradisional',
+    theme: 'PELESTARIAN PERMAINAN TRADISIONAL',
     content: ['History of CUKI', 'Traditional gameplay', 'Digital transformation'],
-    achievement: 'CUKI Legacy',
-    achievementDescription: 'Learn about CUKI heritage.',
+    achievement: 'Warisan CUKI',
+    achievementDescription: 'Pelajari warisan CUKI.',
     description:
-      'Ikuti perjalanan CUKI dari permainan tradisional keluarga menjadi pengalaman digital yang menjaga memori budaya.',
+      'Telusuri perjalanan permainan tradisional CUKI serta upaya pelestariannya melalui pengalaman digital yang interaktif.',
     story: [
       'CUKI adalah bagian dari tradisi bermain yang mengajarkan strategi, perhatian, dan interaksi sosial. Permainan ini membawa cerita keluarga dan ruang berkumpul.',
       'Transformasi digital membuat CUKI dapat dikenalkan kembali tanpa melepaskan akar budayanya: papan, aturan, dan rasa bermain tetap menjadi pusat pengalaman.',
@@ -241,7 +241,7 @@ export const treasureCollections: readonly TreasureCollection[] = [
 
 export const finalAchievement = {
   title: 'Heritage Guardian',
-  description: 'Menjadi penjaga warisan Sriwijaya di era digital.',
+  description: 'Menjadi penjaga warisan Kesultanan Palembang Darussalam di era digital.',
   icon: Landmark,
 } as const;
 

@@ -88,6 +88,10 @@ select {
     logo-float 5s ease-in-out infinite;
 }
 
+.gate-page-fade-in {
+  animation: gate-page-fade-in 1000ms ease-out both;
+}
+
 .cuki-logo-orbit::before,
 .cuki-logo-orbit::after {
   position: absolute;
@@ -118,6 +122,15 @@ select {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes gate-page-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
