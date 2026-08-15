@@ -16,7 +16,14 @@ function renderPage(page: JSX.Element): string {
 
 describe('public frontend pages', () => {
   it('renders the documented Welcome, Kingdom, and CUKI destination screens', () => {
-    expect(renderPage(<WelcomePage />)).toContain('Lanjut sebagai tamu');
+    const welcomeMarkup = renderPage(<WelcomePage />);
+
+    expect(welcomeMarkup).toContain('GERBANG');
+    expect(welcomeMarkup).toContain('PALEMBANG DARUSSALAM');
+    expect(welcomeMarkup).toContain('Selamat datang di Kesultanan Palembang Darussalam');
+    expect(welcomeMarkup).toContain('Membuka gerbang...');
+    expect(welcomeMarkup).toContain('Menyiapkan pengalaman terbaik untukmu');
+
     const homeMarkup = renderPage(<HomePage />);
 
     expect(homeMarkup).toContain('Warisan Sriwijaya');
@@ -49,7 +56,7 @@ describe('public frontend pages', () => {
       </StaticRouter>,
     );
 
-    expect(markup).toContain('Lanjut sebagai tamu');
+    expect(markup).toContain('PALEMBANG DARUSSALAM');
   });
 
   it('opens dedicated archive detail routes with story and challenge content', () => {

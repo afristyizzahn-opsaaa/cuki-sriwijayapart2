@@ -73,9 +73,27 @@ export function AuthPage(): JSX.Element {
   };
 
   return (
-    <main className="min-h-screen bg-bg-dark-slate px-5 py-10 text-text-light">
-      <PageContainer className="grid min-h-[calc(100vh-5rem)] place-items-center">
-        <Card className="w-full max-w-2xl border border-primary-gold/35" variant="mahogany">
+    <main className="relative min-h-screen overflow-hidden bg-[#120B08] px-5 py-10 text-text-light">
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(241,200,76,0.18),transparent_30%),linear-gradient(180deg,#2b170f_0%,#120b08_40%,#0b1018_100%)]"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 opacity-35"
+        style={{
+          backgroundImage: `linear-gradient(180deg, rgba(10,15,25,0.05), rgba(10,15,25,0.44)), url('/assets/masjid-agung-sriwijaya.png')`,
+          backgroundPosition: 'center center',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 bg-[linear-gradient(180deg,rgba(10,15,25,0.12)_0%,rgba(10,15,25,0.46)_44%,rgba(10,15,25,0.78)_100%)]"
+      />
+      <PageContainer className="relative grid min-h-[calc(100vh-5rem)] place-items-center">
+        <Card className="w-full max-w-2xl border border-primary-gold/35 bg-bg-dark-slate/92 shadow-elevation-4" variant="mahogany">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary-amber">Akun CUKI</p>

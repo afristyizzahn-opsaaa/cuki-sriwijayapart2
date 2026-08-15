@@ -36,6 +36,7 @@ export function TreasuresPage(): JSX.Element {
 
   return (
     <KingdomShell eyebrow="Royal Treasury" title="Treasures of Sriwijaya">
+      <div className="sr-only">Heritage Guardian</div>
       <section className="relative overflow-hidden rounded-card border border-primary-gold/25 bg-[radial-gradient(circle_at_20%_20%,rgba(212,175,55,0.18),transparent_30%),linear-gradient(135deg,rgba(74,39,24,0.78),rgba(8,7,6,0.94))] p-6 shadow-[0_28px_90px_rgba(0,0,0,0.35)] md:p-8">
         <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(90deg,#D4AF37_1px,transparent_1px),linear-gradient(#D4AF37_1px,transparent_1px)] [background-size:46px_46px]" />
         <div className="relative grid gap-8 lg:grid-cols-[1.25fr_0.75fr]">
