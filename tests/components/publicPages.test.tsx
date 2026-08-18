@@ -66,10 +66,49 @@ describe('public frontend pages', () => {
       </StaticRouter>,
     );
 
-    expect(markup).toContain('Nusantara Harmony');
-    expect(markup).toContain('Jejak Akulturasi Islam Nusantara');
+    expect(markup).toContain('Harmoni Nusantara');
+    expect(markup).toContain('Jejak Akulturasi Nusantara');
     expect(markup).toContain('Knowledge Challenge');
     expect(markup).toContain('+100 XP');
+    expect(markup).toContain('Mulai Tantangan');
+  });
+
+  it('renders the CUKI archive detail content', () => {
+    const markup = renderToStaticMarkup(
+      <StaticRouter location="/treasures/legacy">
+        <App />
+      </StaticRouter>,
+    );
+
+    expect(markup).toContain('CUKI');
+    expect(markup).toContain('Warisan Permainan Sriwijaya');
+    expect(markup).toContain('Strategi dan interaksi tetap menjadi inti permainan');
+    expect(markup).toContain('Jelajahi CUKI sebagai pengalaman permainan digital');
+  });
+
+  it('renders the Sungai Musi archive detail content', () => {
+    const markup = renderToStaticMarkup(
+      <StaticRouter location="/treasures/ocean">
+        <App />
+      </StaticRouter>,
+    );
+
+    expect(markup).toContain('Jejak Sungai Musi');
+    expect(markup).toContain('Kehidupan Kesultanan Palembang Darussalam sangat berkaitan dengan Sungai Musi');
+    expect(markup).toContain('Sungai Musi menjadi jalur penting bagi aktivitas perdagangan');
+    expect(markup).toContain('Mulai Tantangan');
+  });
+
+  it('renders the Catatan Sejarah archive detail content', () => {
+    const markup = renderToStaticMarkup(
+      <StaticRouter location="/treasures/knowledge">
+        <App />
+      </StaticRouter>,
+    );
+
+    expect(markup).toContain('Catatan Sejarah');
+    expect(markup).toContain('Jejak Kesultanan Palembang Darussalam');
+    expect(markup).toContain('Benteng Kuto Besak menjadi salah satu jejak sejarah penting Palembang');
     expect(markup).toContain('Mulai Tantangan');
   });
 });

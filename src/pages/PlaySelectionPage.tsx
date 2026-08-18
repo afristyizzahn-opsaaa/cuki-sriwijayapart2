@@ -8,22 +8,22 @@ import { SCRATCH_GAME_URL, hasScratchGameUrl } from '../constants/gameEntry';
 
 const OPTIONS = [
   {
-    badge: 'CLASSIC',
-    title: 'CUKI Classic — Scratch Version',
-    description: 'Mainkan versi klasik CUKI yang sudah siap dimainkan.',
-    cta: 'Main via Scratch',
-    helper: 'Stable gameplay version. Open in a new tab.',
+    badge: 'VERSI KLASIK',
+    title: 'CUKI melalui Scratch',
+    description: 'Mainkan CUKI dalam versi klasik yang siap dimainkan kapan saja.',
+    cta: 'Main melalui Scratch ↗',
+    helper: 'Permainan dibuka melalui Scratch di tab baru.',
     icon: Sparkles,
     href: SCRATCH_GAME_URL,
     external: true,
     disabled: !hasScratchGameUrl(),
   },
   {
-    badge: 'PROGRESS ENABLED',
-    title: 'CUKI Web — Integrated Version',
-    description: 'Main langsung di website dan simpan progress permainanmu.',
+    badge: 'VERSI TERHUBUNG',
+    title: 'CUKI di Website',
+    description: 'Main langsung di website dan lanjutkan perjalanan CUKI melalui akunmu.',
     cta: 'Main di Website',
-    helper: 'Connected to your profile and Supabase progress.',
+    helper: 'Progres permainan tersimpan dan terhubung dengan profilmu.',
     icon: Gamepad2,
     href: '/setup',
     external: false,
@@ -33,7 +33,7 @@ const OPTIONS = [
 
 export function PlaySelectionPage(): JSX.Element {
   return (
-    <KingdomShell eyebrow="Gameplay Gateway" title="Choose Your CUKI Version">
+    <KingdomShell eyebrow="Gameplay Gateway" title="Pilih Versi CUKI-mu">
       <section className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-2">
         {OPTIONS.map((option) => {
           const Icon = option.icon;

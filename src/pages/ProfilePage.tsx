@@ -24,7 +24,7 @@ const AVATAR_OPTIONS: readonly AvatarOption[] = [
   { id: 'royal-1', label: 'Royal Crown', icon: Crown, className: 'from-amber-500 to-yellow-200' },
   {
     id: 'royal-2',
-    label: 'Sriwijaya Spark',
+    label: 'Gemilau Palembang Darussalam',
     icon: Sparkles,
     className: 'from-amber-400 to-orange-200',
   },

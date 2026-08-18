@@ -19,6 +19,9 @@ import pempekImage from '../../assets/pempek.jpeg';
 import songketImage from '../../assets/kain songket.jpeg.webp';
 import maksubaImage from '../../assets/kue maksuba.jpeg';
 
+const cukiShowcaseImage = `${import.meta.env.BASE_URL}assets/khazanah/cuki-warisan-hidup.png`;
+const cukiBoardGameImage = `${import.meta.env.BASE_URL}assets/produk/cuki-board-game.jpeg`;
+
 const instagramUrl =
   'https://www.instagram.com/goc.sriwijaya?igsh=andmOWswZ2l1NzE3&igsi=andmOWswZ2l1NzE3';
 const tiktokUrl = 'https://www.tiktok.com/@gameofcuki?_r=1&_t=ZS-98uAHWve1Uy';
@@ -26,6 +29,7 @@ const tiktokUrl = 'https://www.tiktok.com/@gameofcuki?_r=1&_t=ZS-98uAHWve1Uy';
 interface ProductCardData {
   readonly category: string;
   readonly description: string;
+  readonly highlight?: string;
   readonly icon: LucideIcon;
   readonly image?: string;
   readonly isFeatured?: boolean;
@@ -35,10 +39,12 @@ interface ProductCardData {
 
 const productCards: readonly ProductCardData[] = [
   {
-    category: 'Board Game Heritage',
+    category: 'Warisan yang Kembali Dimainkan',
     description:
-      'Permainan strategi tradisional dari Sumatera Selatan dalam bentuk fisik untuk keluarga dan komunitas.',
+      'Dari permainan tradisional masyarakat Sumatera Selatan, CUKI hadir kembali dalam bentuk permainan fisik yang dapat dimainkan bersama keluarga dan komunitas.',
+    highlight: 'Bukan sekadar permainan.\nIni warisan yang kembali hidup.',
     icon: Dice5,
+    image: cukiBoardGameImage,
     isFeatured: true,
     name: 'CUKI BOARD GAME',
     price: 'Harga segera diumumkan',
@@ -89,7 +95,7 @@ export function ProductPage(): JSX.Element {
             <p className="mt-5 max-w-2xl text-sm leading-7 text-surface-parchment/78 md:text-base">
               Permainan strategi tradisional dari Sumatera Selatan yang kini hadir dalam versi
               fisik. Rasakan pengalaman bermain CUKI bersama keluarga sekaligus menjaga warisan
-              budaya Sriwijaya.
+              budaya yang hampir punah.
             </p>
             <div className="mt-7 grid gap-3 sm:grid-cols-2">
               <Highlight icon={Dice5} label="Permainan Strategi Tradisional" />
@@ -180,7 +186,14 @@ function ProductShowcase(): JSX.Element {
     <div className="relative mx-auto max-w-[620px] rounded-[2rem] border border-primary-gold/30 bg-bg-dark/45 p-5 shadow-[0_0_70px_rgba(212,175,55,0.18)] backdrop-blur-sm">
       <div className="absolute -right-8 -top-8 h-36 w-36 rounded-full bg-primary-gold/20 blur-3xl" />
       <div className="relative rounded-[1.5rem] border border-primary-gold/25 bg-[radial-gradient(circle_at_50%_20%,rgba(212,175,55,0.14),transparent_38%),rgba(8,7,6,0.48)] p-5">
-        <div className="relative mx-auto aspect-[4/3] max-w-[520px] rounded-2xl border border-primary-gold/35 bg-bg-mahogany/70 p-4 shadow-[0_20px_60px_rgba(0,0,0,0.38)]">
+        <div className="relative mx-auto aspect-[4/3] max-w-[520px] overflow-hidden rounded-2xl border border-primary-gold/35 bg-bg-mahogany/70 shadow-[0_20px_60px_rgba(0,0,0,0.38)]">
+          <img
+            alt="CUKI warisan hidup"
+            className="absolute inset-0 h-full w-full object-cover object-center"
+            src={cukiShowcaseImage}
+          />
+          <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,7,6,0.02),rgba(8,7,6,0.12))]" />
+          <div className="relative opacity-0">
           <div className="absolute -bottom-7 left-1/2 h-10 w-4/5 -translate-x-1/2 rounded-full bg-black/50 blur-xl" />
           <div className="grid h-full grid-cols-[1.35fr_0.65fr] gap-4">
             <div className="rounded-xl border-4 border-[#d7ad57] bg-[#17212c] p-[7%] shadow-[inset_0_0_0_3px_#09111a]">
@@ -212,6 +225,7 @@ function ProductShowcase(): JSX.Element {
                 ))}
               </div>
             </div>
+          </div>
           </div>
         </div>
         <p className="mt-7 text-center text-xs font-bold uppercase tracking-[0.24em] text-primary-gold">
@@ -255,12 +269,17 @@ function ProductCard({ product }: { readonly product: ProductCardData }): JSX.El
       </div>
       <h3 className="mt-4 font-display text-2xl font-semibold text-primary-gold">{product.name}</h3>
       <p className="mt-3 text-sm leading-6 text-surface-parchment/70">{product.description}</p>
+      {product.highlight ? (
+        <p className="mt-4 whitespace-pre-line text-sm font-semibold leading-6 text-surface-parchment">
+          {product.highlight}
+        </p>
+      ) : null}
       <p className="mt-4 text-sm font-semibold text-surface-parchment">{product.price}</p>
       <Button
         className="mt-5 w-full rounded-full border-primary-gold/45 bg-bg-mahogany/70"
         variant={product.isFeatured ? 'primary' : 'secondary'}
       >
-        Lihat Detail
+        {product.isFeatured ? 'Jelajahi CUKI' : 'Lihat Detail'}
       </Button>
     </article>
   );

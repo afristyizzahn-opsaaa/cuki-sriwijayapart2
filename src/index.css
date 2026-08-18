@@ -25,6 +25,352 @@ body {
   background: #2b1b17;
 }
 
+/* The opening overlay is intentionally atmospheric: the architecture remains
+   visible, while the UI stays in the margins like a ceremonial titah. */
+.gate-overlay-light {
+  position: absolute;
+  inset: 0;
+  z-index: -10;
+  background:
+    radial-gradient(circle at 50% 22%, rgba(201, 162, 77, 0.07), transparent 18%),
+    radial-gradient(circle at 50% 44%, rgba(201, 162, 77, 0.03), transparent 28%),
+    radial-gradient(circle at 50% 78%, rgba(201, 162, 77, 0.035), transparent 24%),
+    radial-gradient(circle at 50% 96%, rgba(201, 162, 77, 0.02), transparent 18%);
+  pointer-events: none;
+}
+
+.gate-titah {
+  position: relative;
+}
+
+.gate-titah::after {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 50%, transparent 34%, rgba(9, 6, 4, 0.12) 100%),
+    radial-gradient(circle at 50% 86%, rgba(9, 6, 4, 0.08), transparent 28%);
+  content: '';
+  pointer-events: none;
+  z-index: -1;
+}
+
+.gate-title-block {
+  padding-top: clamp(1rem, 2.6vh, 1.6rem);
+}
+
+.gate-title-line {
+  width: min(32rem, 72vw);
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(201, 162, 77, 0.72), transparent);
+  content: '';
+}
+
+.gate-top-divider {
+  transform-origin: center;
+}
+
+.gate-top-divider,
+.gate-divider-line {
+  opacity: 0.88;
+}
+
+.gate-footer {
+  padding-bottom: clamp(1.4rem, 3.4vh, 2.2rem);
+}
+
+.gate-divider-line {
+  position: relative;
+}
+
+.gate-divider-line::before {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 11px;
+  height: 11px;
+  border: 1px solid rgba(201, 162, 77, 0.4);
+  background: rgba(201, 162, 77, 0.08);
+  content: '';
+  transform: translate(-50%, -50%) rotate(45deg);
+  box-shadow: 0 0 0 5px rgba(201, 162, 77, 0.03);
+}
+
+.gate-songket-mark::before,
+.gate-songket-mark::after {
+  position: absolute;
+  top: 50%;
+  width: 10px;
+  height: 1px;
+  background: rgba(201, 162, 77, 0.36);
+  content: '';
+}
+
+.gate-songket-mark::before {
+  left: 0;
+}
+
+.gate-songket-mark::after {
+  right: 0;
+}
+
+.gate-kicker,
+.gate-lead,
+.gate-subtitle,
+.gate-cta,
+.gate-secondary {
+  animation: gate-fade-up 1.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.gate-kicker {
+  animation-delay: 100ms;
+}
+
+.gate-top-divider {
+  animation: gate-expand 1.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  animation-delay: 220ms;
+}
+
+.gate-lead {
+  animation-delay: 420ms;
+}
+
+.gate-subtitle {
+  animation-delay: 620ms;
+}
+
+.gate-cta {
+  cursor: pointer;
+  animation-delay: 800ms;
+}
+
+.gate-secondary {
+  text-shadow: 0 1px 8px rgba(8, 4, 2, 0.55);
+  animation-delay: 960ms;
+}
+
+.gate-card {
+  filter: drop-shadow(0 0 30px rgba(201, 162, 77, 0.2));
+}
+
+.gate-card-frame {
+  position: relative;
+}
+
+.gate-card-frame::before {
+  position: absolute;
+  inset: 8px;
+  border-radius: 22px;
+  border: 1px solid rgba(227, 199, 122, 0.14);
+  content: '';
+  pointer-events: none;
+}
+
+.gate-card-frame::after {
+  position: absolute;
+  inset: auto 12px 12px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(227, 199, 122, 0.12), transparent);
+  content: '';
+  pointer-events: none;
+}
+
+.gate-card-crown {
+  box-shadow:
+    0 0 0 1px rgba(201, 162, 77, 0.16),
+    0 0 30px rgba(201, 162, 77, 0.22);
+}
+
+.gate-card-center-top,
+.gate-card-center-bottom {
+  position: absolute;
+  left: 50%;
+  width: 34px;
+  height: 16px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+.gate-card-center-top {
+  top: -8px;
+}
+
+.gate-card-center-bottom {
+  bottom: -8px;
+}
+
+.gate-card-center-top::before,
+.gate-card-center-bottom::before {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(227, 199, 122, 0.6);
+  background: rgba(201, 162, 77, 0.08);
+  content: '';
+  transform: translate(-50%, -50%) rotate(45deg);
+  box-shadow: 0 0 14px rgba(201, 162, 77, 0.18);
+}
+
+.gate-card-center-top::after,
+.gate-card-center-bottom::after {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(227, 199, 122, 0.65), transparent);
+  content: '';
+  transform: translate(-50%, -50%);
+}
+
+.gate-panel-spark {
+  position: relative;
+  width: 12px;
+  height: 12px;
+}
+
+.gate-panel-spark::before {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle, rgba(227, 199, 122, 0.95) 0 20%, transparent 22%),
+    linear-gradient(
+      90deg,
+      transparent 0 43%,
+      rgba(227, 199, 122, 0.75) 43% 57%,
+      transparent 57% 100%
+    ),
+    linear-gradient(
+      0deg,
+      transparent 0 43%,
+      rgba(227, 199, 122, 0.75) 43% 57%,
+      transparent 57% 100%
+    );
+  content: '';
+  filter: drop-shadow(0 0 10px rgba(201, 162, 77, 0.26));
+  transform: rotate(45deg);
+}
+
+.gate-salutation-wrap,
+.gate-subtitle-wrap {
+  position: relative;
+}
+
+.gate-salutation-wrap::before,
+.gate-subtitle-wrap::before {
+  position: absolute;
+  inset: -0.45rem -0.75rem;
+  border-radius: 9999px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(10, 7, 3, 0.4) 0%,
+    rgba(10, 7, 3, 0.2) 55%,
+    transparent 82%
+  );
+  content: '';
+  filter: blur(2px);
+  z-index: -1;
+}
+
+.gate-salutation {
+  text-shadow:
+    0 2px 12px rgba(0, 0, 0, 0.55),
+    0 0 30px rgba(198, 150, 62, 0.12);
+}
+
+.gate-subtitle {
+  color: rgba(255, 244, 220, 0.92);
+}
+
+.gate-card-frame .gate-panel-spark {
+  width: 11px;
+  height: 11px;
+}
+
+.gate-card-frame .gate-panel-spark::before {
+  filter: drop-shadow(0 0 8px rgba(201, 162, 77, 0.2));
+}
+
+.gate-lead,
+.gate-subtitle {
+  text-wrap: balance;
+}
+
+.gate-cta-line {
+  will-change: width;
+}
+
+.gate-cta svg {
+  transition: transform 420ms ease;
+}
+
+.gate-cta:hover svg {
+  transform: translateX(5px);
+}
+
+.gate-cta-link-wrap {
+  text-shadow: 0 0 10px rgba(201, 162, 77, 0.18);
+}
+
+.gate-cta:hover .gate-cta-link-wrap {
+  text-shadow: 0 0 14px rgba(201, 162, 77, 0.26);
+}
+
+.gate-cta-title {
+  letter-spacing: 0.04em;
+}
+
+.gate-cta-pointer {
+  transition: transform 280ms ease;
+}
+
+.gate-cta:hover .gate-cta-pointer {
+  transform: translateX(4px);
+}
+
+@keyframes gate-expand {
+  from {
+    opacity: 0;
+    transform: scaleX(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+
+@keyframes gate-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gate-diamond {
+  box-shadow: 0 0 12px rgba(201, 162, 77, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gate-kicker,
+  .gate-lead,
+  .gate-subtitle,
+  .gate-cta,
+  .gate-secondary,
+  .gate-top-divider {
+    animation: none;
+  }
+
+  .gate-cta-line,
+  .gate-cta svg {
+    transition: none;
+  }
+}
+
 #root {
   min-height: 100vh;
 }

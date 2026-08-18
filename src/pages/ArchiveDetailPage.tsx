@@ -27,6 +27,7 @@ export function ArchiveDetailPage(): JSX.Element {
   const [selectedOptionId, setSelectedOptionId] = useState<string | null>(null);
   const [submittedOption, setSubmittedOption] = useState<QuizOption | null>(null);
   const [earnedReward, setEarnedReward] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
   const recordQuizSuccess = useScratchCardStore((state) => state.recordQuizSuccess);
 
   const profileLevel = useMemo(() => getProfileLevel(progress), [progress]);
@@ -52,6 +53,14 @@ export function ArchiveDetailPage(): JSX.Element {
   const progressCount = getArchiveProgressCount(treasure, progress);
   const correctOption = treasure.quizOptions.find((option) => option.isCorrect);
   const score = submittedOption?.isCorrect ? 1 : 0;
+  const storyLabel = treasure.storyLabel ?? 'Story';
+  const factsLabel = treasure.factsLabel ?? 'Historical Facts';
+  const challengeLabel = treasure.challengeLabel ?? 'Knowledge Challenge';
+  const rewardLabel = treasure.rewardLabel ?? 'Reward';
+  const progressLabel = treasure.progressLabel ?? `${progressCount} / ${treasure.totalProgress} Progress`;
+  const backLinkLabel = treasure.backLinkLabel ?? 'Kembali ke Treasures';
+  const treasureProgressLabel = treasure.treasureProgressLabel ?? '+1 Treasure Progress';
+  const achievementProgressLabel = treasure.achievementProgressLabel ?? 'Achievement Progress Updated';
 
   const submitAnswer = (): void => {
     const selectedOption = treasure.quizOptions.find((option) => option.id === selectedOptionId);
@@ -85,7 +94,7 @@ export function ArchiveDetailPage(): JSX.Element {
           to="/treasures"
         >
           <ArrowLeft aria-hidden="true" className="h-4 w-4" />
-          Kembali ke Treasures
+          {backLinkLabel}
         </Link>
       </div>
 
@@ -101,11 +110,11 @@ export function ArchiveDetailPage(): JSX.Element {
             </h2>
             <p className="mt-3 font-display text-2xl text-primary-gold">{treasure.subtitle}</p>
             <p className="mt-5 max-w-2xl text-sm leading-7 text-surface-parchment/76 md:text-base">
-              {treasure.description}
+              {treasure.heroDescription ?? treasure.description}
             </p>
             <div className="mt-6 flex flex-wrap gap-3 text-xs font-bold uppercase tracking-[0.15em]">
               <span className="rounded-full border border-primary-gold/30 px-3 py-2 text-primary-gold">
-                {progressCount} / {treasure.totalProgress} Progress
+                {progressLabel}
               </span>
               <span className="rounded-full border border-primary-gold/30 px-3 py-2 text-surface-parchment/70">
                 {progress.knowledgePoints} XP
@@ -116,18 +125,39 @@ export function ArchiveDetailPage(): JSX.Element {
             </div>
           </div>
 
-          <div className="relative grid min-h-[320px] place-items-center overflow-hidden rounded-card border border-primary-gold/25 bg-[radial-gradient(circle_at_50%_35%,rgba(212,175,55,0.2),rgba(8,7,6,0.38)_58%,rgba(0,0,0,0.35))] shadow-[inset_0_0_80px_rgba(212,175,55,0.08)]">
-            <div className="absolute inset-8 rounded-[2rem] border border-primary-gold/15" />
-            <div className="relative text-center">
-              <div className="mx-auto grid h-28 w-28 place-items-center rounded-full border border-primary-gold bg-primary-gold/15 text-primary-gold shadow-[0_0_50px_rgba(212,175,55,0.28)]">
-                <Icon aria-hidden="true" className="h-14 w-14" />
+          <div className="group relative min-h-[320px] overflow-hidden rounded-card border border-primary-gold/25 bg-[linear-gradient(180deg,rgba(38,22,13,0.32),rgba(10,8,7,0.88))] shadow-[inset_0_0_80px_rgba(212,175,55,0.08)]">
+            {!imageFailed && treasure.image ? (
+              <img
+                alt={treasure.imageTitle ?? treasure.title}
+                className="h-full w-full object-cover object-center opacity-90 brightness-[0.85] contrast-[1.05] sepia-[0.2] transition-transform duration-[450ms] ease-out group-hover:scale-[1.02]"
+                src={treasure.image}
+                onError={() => setImageFailed(true)}
+              />
+            ) : (
+              <div
+                aria-hidden="true"
+                className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_50%_30%,rgba(212,175,55,0.12),transparent_42%),linear-gradient(180deg,rgba(60,38,18,0.72),rgba(14,9,6,0.92))]"
+              >
+                <div className="text-center text-surface-parchment/70">
+                  <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary-gold/80">
+                    Visual Arsip
+                  </p>
+                </div>
               </div>
-              <p className="mt-6 text-xs font-bold uppercase tracking-[0.28em] text-primary-gold">
-                Historical Illustration
+            )}
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(25,14,8,0.08)_0%,rgba(25,14,8,0.18)_42%,rgba(17,10,6,0.74)_100%)]" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,transparent,rgba(18,11,7,0.9))] px-5 pb-5 pt-16">
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-surface-parchment/80">
+                {treasure.imageTitle ?? `Visual ${treasure.title}`}
               </p>
-              <p className="mt-3 max-w-xs text-sm leading-6 text-surface-parchment/66">
-                Ruang visual arsip untuk ilustrasi sejarah resmi yang dapat ditambahkan nanti.
+              <p className="mt-2 max-w-sm text-sm leading-6 text-surface-parchment/72">
+                {treasure.imageDescription ?? 'Visual arsip yang merepresentasikan isi koleksi ini.'}
               </p>
+              {treasure.imageCredit ? (
+                <p className="mt-3 text-[0.7rem] leading-5 tracking-[0.08em] text-surface-parchment/52">
+                  {treasure.imageCredit}
+                </p>
+              ) : null}
             </div>
           </div>
         </div>
@@ -135,7 +165,7 @@ export function ArchiveDetailPage(): JSX.Element {
 
       <section className="mt-8 grid gap-6 xl:grid-cols-[1fr_380px]">
         <article className="rounded-card border border-primary-gold/20 bg-bg-dark/62 p-6 shadow-[0_20px_64px_rgba(0,0,0,0.26)] md:p-8">
-          <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary-amber">Story</p>
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary-amber">{storyLabel}</p>
           <div className="mt-5 space-y-5">
             {treasure.story.map((paragraph) => (
               <p key={paragraph} className="text-base leading-8 text-surface-parchment/82">
@@ -145,7 +175,7 @@ export function ArchiveDetailPage(): JSX.Element {
           </div>
           <div className="mt-8">
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary-amber">
-              Historical Facts
+              {factsLabel}
             </p>
             <div className="mt-4 grid gap-3 sm:grid-cols-2">
               {treasure.facts.map((fact) => (
@@ -174,7 +204,14 @@ export function ArchiveDetailPage(): JSX.Element {
 
         <aside className="rounded-card border border-primary-gold/25 bg-bg-dark/72 p-5 shadow-[0_24px_66px_rgba(0,0,0,0.3)]">
           {challengeState === 'reading' ? (
-            <ChallengeIntro isCompleted={isCompleted} rewardXp={treasure.rewardXp} />
+            <ChallengeIntro
+              achievementProgressLabel={achievementProgressLabel}
+              challengeLabel={challengeLabel}
+              isCompleted={isCompleted}
+              rewardLabel={rewardLabel}
+              rewardXp={treasure.rewardXp}
+              treasureProgressLabel={treasureProgressLabel}
+            />
           ) : null}
           {challengeState === 'challenge' ? (
             <ChallengePanel
@@ -192,8 +229,10 @@ export function ArchiveDetailPage(): JSX.Element {
           {challengeState === 'completed' ? (
             <RewardPanel
               earnedReward={earnedReward}
+              achievementProgressLabel={achievementProgressLabel}
               progressCount={progressCount}
               rewardXp={treasure.rewardXp}
+              treasureProgressLabel={treasureProgressLabel}
               title={treasure.achievement}
               totalProgress={treasure.totalProgress}
             />
@@ -205,16 +244,24 @@ export function ArchiveDetailPage(): JSX.Element {
 }
 
 function ChallengeIntro({
+  achievementProgressLabel,
+  challengeLabel,
   isCompleted,
+  rewardLabel,
   rewardXp,
+  treasureProgressLabel,
 }: {
+  readonly achievementProgressLabel: string;
+  readonly challengeLabel: string;
   readonly isCompleted: boolean;
+  readonly rewardLabel: string;
   readonly rewardXp: number;
+  readonly treasureProgressLabel: string;
 }): JSX.Element {
   return (
     <>
       <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary-amber">
-        Knowledge Challenge
+        {challengeLabel}
       </p>
       <h2 className="mt-3 font-display text-3xl font-semibold text-primary-gold">
         Tantangan Pengetahuan
@@ -223,12 +270,12 @@ function ChallengeIntro({
         Selesaikan pertanyaan arsip untuk membuka badge dan memperbarui progress koleksi.
       </p>
       <div className="mt-6 rounded-2xl border border-primary-gold/20 bg-primary-gold/8 p-4">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary-gold">Reward</p>
+        <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary-gold">{rewardLabel}</p>
         <p className="mt-2 text-sm text-surface-parchment/78">
-          {isCompleted ? 'Archive sudah selesai. Reward XP tidak digandakan.' : `+${rewardXp} XP`}
+          {isCompleted ? 'Arsip sudah selesai. Reward XP tidak digandakan.' : `+${rewardXp} XP`}
         </p>
-        <p className="mt-1 text-sm text-surface-parchment/78">+1 Treasure Progress</p>
-        <p className="mt-1 text-sm text-surface-parchment/78">Achievement Progress Updated</p>
+        <p className="mt-1 text-sm text-surface-parchment/78">{treasureProgressLabel}</p>
+        <p className="mt-1 text-sm text-surface-parchment/78">{achievementProgressLabel}</p>
       </div>
     </>
   );
@@ -325,17 +372,21 @@ function ChallengePanel({
 }
 
 function RewardPanel({
+  achievementProgressLabel,
   earnedReward,
   progressCount,
   rewardXp,
   title,
   totalProgress,
+  treasureProgressLabel,
 }: {
+  readonly achievementProgressLabel: string;
   readonly earnedReward: boolean;
   readonly progressCount: number;
   readonly rewardXp: number;
   readonly title: string;
   readonly totalProgress: number;
+  readonly treasureProgressLabel: string;
 }): JSX.Element {
   return (
     <div className="text-center">
@@ -352,9 +403,9 @@ function RewardPanel({
           {earnedReward ? `+${rewardXp} XP` : '+0 XP already claimed'}
         </p>
         <p className="text-sm text-surface-parchment/84">
-          +1 Treasure Progress: {progressCount} / {totalProgress}
+          {treasureProgressLabel}: {progressCount} / {totalProgress}
         </p>
-        <p className="text-sm text-surface-parchment/84">Achievement Progress Updated</p>
+        <p className="text-sm text-surface-parchment/84">{achievementProgressLabel}</p>
       </div>
       <Button asChild className="mt-6 w-full rounded-full">
         <Link to="/treasures">Lihat Badge</Link>

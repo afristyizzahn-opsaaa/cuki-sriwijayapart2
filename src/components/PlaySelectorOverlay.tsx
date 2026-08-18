@@ -45,31 +45,31 @@ export function PlaySelectorOverlay({ onClose }: { readonly onClose: () => void 
             Gameplay Gateway
           </p>
           <h2 className="mt-3 font-display text-3xl text-primary-gold md:text-4xl">
-            Choose Your CUKI Version
+            Pilih Versi CUKI-mu
           </h2>
           <p className="mt-3 max-w-2xl text-sm leading-7 text-surface-parchment/78 md:text-base">
-            Pilih apakah kamu ingin main versi klasik Scratch atau lanjut ke versi web yang
-            tersambung ke profil dan progress.
+            Nikmati CUKI dengan cara yang kamu inginkan. Mainkan versi klasik melalui Scratch
+            atau pilih versi web untuk menyimpan perjalanan dan progres permainanmu.
           </p>
         </div>
 
         <div className="mt-7 grid gap-5 lg:grid-cols-2">
           <PlayOptionCard
-            badge="CLASSIC"
-            cta="Main via Scratch"
-            description="Mainkan versi klasik CUKI yang sudah siap dimainkan."
+            badge="VERSI KLASIK"
+            cta="Main melalui Scratch ↗"
+            description="Mainkan CUKI dalam versi klasik yang siap dimainkan kapan saja."
             external
             href={SCRATCH_GAME_URL}
             icon={Sparkles}
-            helper="Stable gameplay version. Open in a new tab."
+            helper="Permainan dibuka melalui Scratch di tab baru."
           />
           <PlayOptionCard
-            badge="PROGRESS ENABLED"
+            badge="VERSI TERHUBUNG"
             cta="Main di Website"
-            description="Main langsung di website dan simpan progress permainanmu."
+            description="Main langsung di website dan lanjutkan perjalanan CUKI melalui akunmu."
             href="/setup"
             icon={Gamepad2}
-            helper="Connected to your profile and Supabase progress."
+            helper="Progres permainan tersimpan dan terhubung dengan profilmu."
           />
         </div>
       </Card>
