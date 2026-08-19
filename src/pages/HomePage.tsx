@@ -33,7 +33,7 @@ export function HomePage(): JSX.Element {
             src={heroBackground}
           />
           <div className="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_74%_38%,rgba(212,175,55,0.24),transparent_30%),radial-gradient(circle_at_18%_16%,rgba(245,230,200,0.1),transparent_22%),linear-gradient(90deg,rgba(8,7,6,0.92)_0%,rgba(8,7,6,0.78)_40%,rgba(8,7,6,0.68)_64%,rgba(8,7,6,0.58)_100%)]" />
-          <div className="golden-light absolute inset-0 -z-10 opacity-60" />
+          <div className="golden-light absolute inset-0 -z-10 opacity-42" />
           <div className="golden-sheen absolute inset-0 -z-10" />
 
           <div className="mx-auto flex min-h-[calc(100vh-7rem)] w-full max-w-content flex-col justify-center gap-12">

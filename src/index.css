@@ -2,8 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  :root {
+    font-family: 'Lora', Georgia, serif;
+  }
+}
+
 :root {
-  font-family: Georgia, serif;
   color: #f3e5ab;
   background: #2b1b17;
   font-synthesis: none;
@@ -21,8 +26,132 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
+  font-family: 'Lora', Georgia, serif;
   color: #f3e5ab;
   background: #2b1b17;
+}
+
+.gate-background-image {
+  object-position: 50% 50%;
+}
+
+@media (min-width: 768px) {
+  .gate-background-image {
+    object-position: 50% 41%;
+  }
+}
+
+@media (min-width: 1280px) {
+  .gate-background-image {
+    object-position: 50% 38%;
+  }
+}
+
+@media (min-width: 1024px) and (max-height: 820px) {
+  .gate-background-image {
+    object-position: 50% 36%;
+  }
+
+  .gate-titah {
+    gap: 1rem;
+  }
+
+  .gate-title-block {
+    padding-top: clamp(0.6rem, 1.1vh, 0.9rem);
+  }
+
+  .gate-title-line {
+    width: min(29rem, 64vw);
+  }
+
+  .gate-titah .gate-display-copy {
+    line-height: 0.9;
+  }
+
+  .gate-title-block .gate-display-copy {
+    max-width: 700px;
+    font-size: clamp(3.2rem, 4vw, 4.8rem);
+  }
+
+  .gate-title-block .gate-body-copy {
+    margin-top: 14px;
+    max-width: 390px;
+    font-size: 14px;
+    line-height: 1.42;
+  }
+
+  .gate-titah .gate-card {
+    margin-top: 18px;
+    max-width: 580px;
+  }
+
+  .gate-card-frame {
+    padding: 24px 28px;
+  }
+
+  .gate-card .gate-display-copy {
+    font-size: 24px;
+  }
+
+  .gate-card .gate-body-copy {
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+
+  .gate-card .gate-panel-spark {
+    opacity: 0.9;
+    transform: scale(0.92);
+  }
+
+  .gate-card .h-12 {
+    height: 40px;
+    width: 40px;
+  }
+
+  .gate-actions {
+    margin-top: 18px;
+  }
+
+  .gate-cta {
+    min-height: 60px;
+    min-width: 580px;
+  }
+}
+
+@media (min-width: 1600px) {
+  .gate-background-image {
+    object-position: 50% 32%;
+  }
+
+  .gate-title-block {
+    padding-top: clamp(1.05rem, 2vh, 1.45rem);
+  }
+
+  .gate-title-block .gate-display-copy {
+    max-width: 760px;
+    font-size: clamp(4.4rem, 4.2vw, 6.6rem);
+  }
+
+  .gate-title-block .gate-body-copy {
+    max-width: 430px;
+  }
+
+  .gate-titah .gate-card {
+    max-width: 780px;
+  }
+
+  .gate-card-frame {
+    padding: 40px 56px;
+  }
+
+  .gate-actions {
+    margin-top: 24px;
+  }
+
+  .gate-cta {
+    min-width: 660px;
+    min-height: 68px;
+  }
 }
 
 /* The opening overlay is intentionally atmospheric: the architecture remains
@@ -150,6 +279,18 @@ body {
 
 .gate-card {
   filter: drop-shadow(0 0 30px rgba(201, 162, 77, 0.2));
+}
+
+.gate-royal-label {
+  font-family: 'Cinzel', Georgia, serif;
+}
+
+.gate-display-copy {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.gate-body-copy {
+  font-family: 'Lora', Georgia, serif;
 }
 
 .gate-card-frame {
