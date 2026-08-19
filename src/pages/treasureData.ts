@@ -294,7 +294,7 @@ export const treasureCollections: readonly TreasureCollection[] = [
     baseProgress: 3,
     totalProgress: 8,
     icon: Dice5,
-    image: asset('assets/khazanah/cuki-warisan-hidup.png'),
+    image: asset('assets/cuki/cuki-khazanah-product.png'),
     imageTitle: 'CUKI',
     imageDescription: 'Perjalanan CUKI dari warisan permainan tradisional hingga dimainkan kembali.',
   },

@@ -19,7 +19,7 @@ import pempekImage from '../../assets/pempek.jpeg';
 import songketImage from '../../assets/kain songket.jpeg.webp';
 import maksubaImage from '../../assets/kue maksuba.jpeg';
 
-const cukiShowcaseImage = `${import.meta.env.BASE_URL}assets/khazanah/cuki-warisan-hidup.png`;
+const cukiShowcaseImage = `${import.meta.env.BASE_URL}assets/cuki/cuki-khazanah-product.png`;
 const cukiBoardGameImage = `${import.meta.env.BASE_URL}assets/produk/cuki-board-game.jpeg`;
 
 const instagramUrl =
