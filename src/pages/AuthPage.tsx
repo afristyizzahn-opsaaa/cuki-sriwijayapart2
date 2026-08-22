@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 
 import { PageContainer } from '../components/layout/PageContainer';
 import { Button } from '../components/ui/Button';
@@ -24,6 +25,9 @@ export function AuthPage(): JSX.Element {
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -34,8 +38,15 @@ export function AuthPage(): JSX.Element {
       ? 'Login dan progress tersambung ke Supabase.'
       : 'Mode lokal aktif sampai VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY dipasang.';
   const submitLabel = isSubmitting ? 'Memproses...' : mode === 'register' ? 'Buat akun' : 'Masuk';
+  const passwordInputType = showPassword ? 'text' : 'password';
+  const confirmPasswordInputType = showConfirmPassword ? 'text' : 'password';
 
   const handleSubmit = async (): Promise<void> => {
+    if (mode === 'register' && password !== confirmPassword) {
+      setFeedback('Kata sandi dan konfirmasi kata sandi harus sama.');
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const result =
@@ -70,6 +81,14 @@ export function AuthPage(): JSX.Element {
   const switchMode = (nextMode: AuthMode): void => {
     setMode(nextMode);
     setFeedback(null);
+  };
+
+  const togglePasswordVisibility = (): void => {
+    setShowPassword((current) => !current);
+  };
+
+  const toggleConfirmPasswordVisibility = (): void => {
+    setShowConfirmPassword((current) => !current);
   };
 
   return (
@@ -159,15 +178,56 @@ export function AuthPage(): JSX.Element {
             </label>
             <label className="grid gap-2 text-sm">
               Password
-              <input
-                className="min-h-11 rounded-button border border-primary-gold/30 bg-bg-dark-slate px-4 text-text-light outline-none ring-0 placeholder:text-text-muted focus:border-primary-amber disabled:opacity-60"
-                disabled={controlsDisabled}
-                placeholder="Minimal 4 karakter"
-                type="password"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              />
+              <div className="relative">
+                <input
+                  className="min-h-11 w-full rounded-button border border-primary-gold/30 bg-bg-dark-slate px-4 pr-12 text-text-light outline-none ring-0 placeholder:text-text-muted focus:border-primary-amber disabled:opacity-60"
+                  disabled={controlsDisabled}
+                  placeholder="Minimal 4 karakter"
+                  type={passwordInputType}
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+                <button
+                  aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                  className="absolute inset-y-0 right-0 flex items-center justify-center px-3 text-text-muted transition-colors hover:text-primary-gold focus-visible:outline-none focus-visible:text-primary-gold disabled:cursor-not-allowed disabled:opacity-60"
+                  disabled={controlsDisabled}
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
+                </button>
+              </div>
             </label>
+            {mode === 'register' ? (
+              <label className="grid gap-2 text-sm">
+                Konfirmasi Kata Sandi
+                <div className="relative">
+                  <input
+                    className="min-h-11 w-full rounded-button border border-primary-gold/30 bg-bg-dark-slate px-4 pr-12 text-text-light outline-none ring-0 placeholder:text-text-muted focus:border-primary-amber disabled:opacity-60"
+                    disabled={controlsDisabled}
+                    placeholder="Ulangi kata sandi"
+                    type={confirmPasswordInputType}
+                    value={confirmPassword}
+                    onChange={(event) => setConfirmPassword(event.target.value)}
+                  />
+                  <button
+                    aria-label={
+                      showConfirmPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'
+                    }
+                    className="absolute inset-y-0 right-0 flex items-center justify-center px-3 text-text-muted transition-colors hover:text-primary-gold focus-visible:outline-none focus-visible:text-primary-gold disabled:cursor-not-allowed disabled:opacity-60"
+                    disabled={controlsDisabled}
+                    type="button"
+                    onClick={toggleConfirmPasswordVisibility}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-5 w-5" aria-hidden="true" />
+                    ) : (
+                      <Eye className="h-5 w-5" aria-hidden="true" />
+                    )}
+                  </button>
+                </div>
+              </label>
+            ) : null}
           </div>
 
           {feedback ? <p className="mt-5 text-sm text-primary-amber">{feedback}</p> : null}
