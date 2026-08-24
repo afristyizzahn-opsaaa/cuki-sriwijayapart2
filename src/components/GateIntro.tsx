@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 
 import { Button } from './ui/Button';
+import { cukiAudioManager } from '../services/cukiAudioManager';
 import { useAccountStore } from '../stores/useAccountStore';
 import type { PlayerAccount } from '../types/account';
 
@@ -46,6 +47,19 @@ export function GateIntro(): JSX.Element {
   }, [gateVideoReady]);
 
   useEffect(() => {
+    const video = gateVideoRef.current;
+    if (!video) {
+      return;
+    }
+
+    cukiAudioManager.bindGateVideo(video);
+
+    return () => {
+      cukiAudioManager.releaseGateVideo(video);
+    };
+  }, []);
+
+  useEffect(() => {
     if (phase !== 'playing' || !gateVideoReady) {
       return;
     }
@@ -54,6 +68,9 @@ export function GateIntro(): JSX.Element {
     if (!video) {
       return;
     }
+
+    video.muted = true;
+    video.volume = 1;
 
     const playPromise = video.play();
     if (playPromise !== undefined) {
@@ -107,15 +124,16 @@ export function GateIntro(): JSX.Element {
         ref={gateVideoRef}
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-[1] h-screen w-screen object-cover"
-        muted
         playsInline
         preload="auto"
         src={gateVideoUrl}
         style={videoStyle(isPlaying, gateVideoReady, isVideoExiting)}
         onCanPlay={() => setGateVideoReady(true)}
         onLoadedData={() => setGateVideoReady(true)}
+        onPlay={() => cukiAudioManager.handleGateVideoPlay()}
         onTimeUpdate={(event) => {
           const video = event.currentTarget;
+          cukiAudioManager.handleGateVideoProgress(video.currentTime, video.duration);
 
           if (!Number.isFinite(video.duration) || video.duration <= videoExitFadeSeconds) {
             return;
@@ -126,6 +144,7 @@ export function GateIntro(): JSX.Element {
           }
         }}
         onEnded={() => {
+          cukiAudioManager.handleGateVideoEnded();
           setPhase('ended');
           navigate('/home', { state: { fromGateIntro: true } });
         }}

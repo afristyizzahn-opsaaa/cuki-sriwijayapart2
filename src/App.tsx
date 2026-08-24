@@ -16,6 +16,9 @@ import { TutorialPage } from './pages/TutorialPage';
 import { WelcomePage } from './pages/WelcomePage';
 import { useAccountStore } from './stores/useAccountStore';
 import { useGameStore } from './stores/useGameStore';
+import { AudioControls } from './components/AudioControls';
+import { cukiAudioManager } from './services/cukiAudioManager';
+import { useSettingsStore } from './stores/useSettingsStore';
 
 export default function App(): JSX.Element {
   useEffect(() => {
@@ -24,42 +27,55 @@ export default function App(): JSX.Element {
     });
   }, []);
 
+  useEffect(() => {
+    const unsubscribe = useSettingsStore.subscribe(() => {
+      cukiAudioManager.syncFromSettings();
+    });
+
+    cukiAudioManager.syncFromSettings();
+
+    return unsubscribe;
+  }, []);
+
   return (
-    <Routes>
-      <Route path="/" element={<WelcomePage />} />
-      <Route path="/auth" element={<AuthPage />} />
-      <Route path="/home" element={<HomePage />} />
-      <Route path="/play" element={<PlaySelectionPage />} />
-      <Route
-        path="/profile"
-        element={
-          <RequireAccount>
-            <ProfilePage />
-          </RequireAccount>
-        }
-      />
-      <Route
-        path="/game"
-        element={
-          <RequireAccount>
-            <GamePage />
-          </RequireAccount>
-        }
-      />
-      <Route path="/map" element={<MapPage />} />
-      <Route
-        path="/setup"
-        element={
-          <RequireAccount>
-            <SetupPage />
-          </RequireAccount>
-        }
-      />
-      <Route path="/tutorial" element={<TutorialPage />} />
-      <Route path="/treasures" element={<TreasuresPage />} />
-      <Route path="/treasures/:archiveId" element={<ArchiveDetailPage />} />
-      <Route path="/product" element={<ProductPage />} />
-      <Route path="*" element={<Navigate replace to="/" />} />
-    </Routes>
+    <>
+      <AudioControls />
+      <Routes>
+        <Route path="/" element={<WelcomePage />} />
+        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/play" element={<PlaySelectionPage />} />
+        <Route
+          path="/profile"
+          element={
+            <RequireAccount>
+              <ProfilePage />
+            </RequireAccount>
+          }
+        />
+        <Route
+          path="/game"
+          element={
+            <RequireAccount>
+              <GamePage />
+            </RequireAccount>
+          }
+        />
+        <Route path="/map" element={<MapPage />} />
+        <Route
+          path="/setup"
+          element={
+            <RequireAccount>
+              <SetupPage />
+            </RequireAccount>
+          }
+        />
+        <Route path="/tutorial" element={<TutorialPage />} />
+        <Route path="/treasures" element={<TreasuresPage />} />
+        <Route path="/treasures/:archiveId" element={<ArchiveDetailPage />} />
+        <Route path="/product" element={<ProductPage />} />
+        <Route path="*" element={<Navigate replace to="/" />} />
+      </Routes>
+    </>
   );
 }
