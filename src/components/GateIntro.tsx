@@ -314,7 +314,7 @@ export function GateIntro(): JSX.Element {
                           className="gate-secondary gate-body-copy px-0 text-[0.76rem] font-normal tracking-[0.16em] text-[#EEDBB9]/78 hover:text-[#E3C77A]"
                           variant="text"
                         >
-                          <Link to="/auth?mode=login">Masuk</Link>
+                          <Link to="/auth?mode=login&next=%2F">Masuk</Link>
                         </Button>
                         <span className="text-[#E3C77A]/50">·</span>
                         <Button
@@ -322,7 +322,7 @@ export function GateIntro(): JSX.Element {
                           className="gate-secondary gate-body-copy px-0 text-[0.76rem] font-normal tracking-[0.16em] text-[#EEDBB9]/78 hover:text-[#E3C77A]"
                           variant="text"
                         >
-                          <Link to="/auth?mode=register">Daftar</Link>
+                          <Link to="/auth?mode=register&next=%2F">Daftar</Link>
                         </Button>
                       </>
                     )}

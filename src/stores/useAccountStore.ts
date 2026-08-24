@@ -89,7 +89,8 @@ export const useAccountStore = create<AccountStoreState>((set, get) => ({
         if (result.needsEmailConfirmation) {
           return {
             ok: true,
-            message: 'Akun berhasil dibuat. Cek email untuk konfirmasi sebelum login.',
+            message:
+              'Pendaftaran berhasil. Silakan periksa email Anda untuk melakukan verifikasi akun sebelum masuk.',
             requiresEmailConfirmation: true,
           };
         }

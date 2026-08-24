@@ -96,11 +96,41 @@ set search_path = public
 as $$
 declare
   fallback_display_name text;
+  raw_display_name text;
+  raw_nickname text;
+  raw_username text;
+  raw_phone_number text;
+  resolved_display_name text;
+  resolved_nickname text;
+  resolved_username text;
 begin
+  raw_display_name := nullif(trim(new.raw_user_meta_data->>'display_name'), '');
+  raw_nickname := nullif(trim(new.raw_user_meta_data->>'nickname'), '');
+  raw_username := nullif(trim(new.raw_user_meta_data->>'username'), '');
+  raw_phone_number := nullif(trim(new.raw_user_meta_data->>'phone_number'), '');
   fallback_display_name := coalesce(
-    new.raw_user_meta_data->>'display_name',
+    raw_display_name,
     split_part(coalesce(new.email, 'pemain-cuki@example.com'), '@', 1)
   );
+  resolved_display_name := fallback_display_name;
+  resolved_nickname := coalesce(raw_nickname, resolved_display_name);
+  resolved_username := coalesce(raw_username, raw_nickname, resolved_display_name);
+  resolved_username := lower(regexp_replace(resolved_username, '[^a-zA-Z0-9_]+', '_', 'g'));
+  resolved_username := regexp_replace(resolved_username, '_+', '_', 'g');
+  resolved_username := regexp_replace(resolved_username, '^_+|_+$', '', 'g');
+
+  if resolved_username = '' then
+    resolved_username := 'pemain_cuki';
+  end if;
+
+  if exists (
+    select 1
+    from public.profiles
+    where username = resolved_username
+      and id <> new.id
+  ) then
+    resolved_username := resolved_username || '_' || left(replace(new.id::text, '-', ''), 8);
+  end if;
 
   insert into public.profiles (
     id,
@@ -117,10 +147,10 @@ begin
   )
   values (
     new.id,
-    fallback_display_name,
-    new.raw_user_meta_data->>'phone_number',
-    fallback_display_name,
-    lower(regexp_replace(fallback_display_name, '[^a-zA-Z0-9_]+', '_', 'g')),
+    resolved_display_name,
+    raw_phone_number,
+    resolved_nickname,
+    resolved_username,
     'royal-1',
     0,
     0,

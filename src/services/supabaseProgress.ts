@@ -73,7 +73,12 @@ export async function registerSupabaseAccount(input: {
     email: input.email,
     password: input.password,
     options: {
-      data: { display_name: input.displayName, phone_number: input.phoneNumber },
+      data: {
+        display_name: input.displayName,
+        nickname: input.displayName,
+        username: normalizeProfileUsername(input.displayName),
+        phone_number: input.phoneNumber,
+      },
     },
   });
 
@@ -230,10 +235,12 @@ async function saveSupabasePhoneNumber(userId: string, phoneNumber: string): Pro
     return;
   }
 
-  const { error } = await supabase.from('profiles').upsert({
-    id: userId,
-    phone_number: phoneNumber,
-  });
+  const { error } = await supabase
+    .from('profiles')
+    .update({
+      phone_number: phoneNumber,
+    })
+    .eq('id', userId);
 
   if (error) {
     throw new Error(error.message);
