@@ -3,6 +3,7 @@ create extension if not exists pgcrypto;
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   display_name text not null,
+  phone_number text,
   nickname text not null,
   username text not null unique,
   avatar_id text not null default 'royal-1',
@@ -104,6 +105,7 @@ begin
   insert into public.profiles (
     id,
     display_name,
+    phone_number,
     nickname,
     username,
     avatar_id,
@@ -116,6 +118,7 @@ begin
   values (
     new.id,
     fallback_display_name,
+    new.raw_user_meta_data->>'phone_number',
     fallback_display_name,
     lower(regexp_replace(fallback_display_name, '[^a-zA-Z0-9_]+', '_', 'g')),
     'royal-1',
@@ -127,6 +130,7 @@ begin
   )
   on conflict (id) do update set
     display_name = excluded.display_name,
+    phone_number = coalesce(excluded.phone_number, public.profiles.phone_number),
     nickname = excluded.nickname,
     username = excluded.username,
     last_login_at = now();

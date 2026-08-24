@@ -24,6 +24,7 @@ export function AuthPage(): JSX.Element {
   );
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -41,7 +42,20 @@ export function AuthPage(): JSX.Element {
   const passwordInputType = showPassword ? 'text' : 'password';
   const confirmPasswordInputType = showConfirmPassword ? 'text' : 'password';
 
+  const handlePhoneNumberChange = (value: string): void => {
+    const digitsOnly = value.replace(/\D/g, '');
+    setPhoneNumber(digitsOnly);
+  };
+
   const handleSubmit = async (): Promise<void> => {
+    if (mode === 'register' && phoneNumber.trim().length === 0) {
+      setFeedback('Nomor HP wajib diisi.');
+      return;
+    }
+    if (mode === 'register' && !/^08\d{8,13}$/.test(phoneNumber)) {
+      setFeedback('Nomor HP tidak valid. Gunakan format 08xxxxxxxxxx.');
+      return;
+    }
     if (mode === 'register' && password !== confirmPassword) {
       setFeedback('Kata sandi dan konfirmasi kata sandi harus sama.');
       return;
@@ -51,7 +65,7 @@ export function AuthPage(): JSX.Element {
     try {
       const result =
         mode === 'register'
-          ? await registerAccount({ displayName, email, password })
+          ? await registerAccount({ displayName, email, password, phoneNumber })
           : await loginAccount({ email, password });
 
       setFeedback(result.message);
@@ -176,6 +190,21 @@ export function AuthPage(): JSX.Element {
                 onChange={(event) => setEmail(event.target.value)}
               />
             </label>
+            {mode === 'register' ? (
+              <label className="grid gap-2 text-sm">
+                Nomor HP
+                <input
+                  className="min-h-11 rounded-button border border-primary-gold/30 bg-bg-dark-slate px-4 text-text-light outline-none ring-0 placeholder:text-text-muted focus:border-primary-amber disabled:opacity-60"
+                  disabled={controlsDisabled}
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  placeholder="08xxxxxxxxxx"
+                  type="tel"
+                  value={phoneNumber}
+                  onChange={(event) => handlePhoneNumberChange(event.target.value)}
+                />
+              </label>
+            ) : null}
             <label className="grid gap-2 text-sm">
               Password
               <div className="relative">

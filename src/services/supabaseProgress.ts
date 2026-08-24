@@ -21,6 +21,7 @@ interface TreasureProgress {
 interface ProfileRow {
   readonly id: string;
   readonly display_name: string;
+  readonly phone_number: string | null;
   readonly nickname: string | null;
   readonly username: string | null;
   readonly avatar_id: string | null;
@@ -62,6 +63,7 @@ export async function registerSupabaseAccount(input: {
   readonly displayName: string;
   readonly email: string;
   readonly password: string;
+  readonly phoneNumber: string;
 }): Promise<{ readonly profile: SupabaseAuthProfile | null; readonly needsEmailConfirmation: boolean }> {
   if (!supabase) {
     return { profile: null, needsEmailConfirmation: false };
@@ -71,7 +73,7 @@ export async function registerSupabaseAccount(input: {
     email: input.email,
     password: input.password,
     options: {
-      data: { display_name: input.displayName },
+      data: { display_name: input.displayName, phone_number: input.phoneNumber },
     },
   });
 
@@ -81,6 +83,8 @@ export async function registerSupabaseAccount(input: {
   if (!data.user || !data.session) {
     return { profile: null, needsEmailConfirmation: true };
   }
+
+  await saveSupabasePhoneNumber(data.user.id, input.phoneNumber);
 
   return {
     profile: await loadSupabaseProfile(data.user, input.displayName),
@@ -204,6 +208,9 @@ export async function saveSupabaseTreasureProgress(progress: TreasureProgress): 
 
 async function loadSupabaseProfile(user: User, displayName?: string): Promise<SupabaseAuthProfile> {
   const profile = await ensureProfile(user, displayName);
+  if (user.user_metadata?.phone_number) {
+    await saveSupabasePhoneNumber(user.id, String(user.user_metadata.phone_number));
+  }
   const [restoredGameState, restoredTreasureProgress] = await Promise.all([
     loadRemoteGameState(user.id),
     loadRemoteTreasureProgress(user.id),
@@ -218,6 +225,21 @@ async function loadSupabaseProfile(user: User, displayName?: string): Promise<Su
   };
 }
 
+async function saveSupabasePhoneNumber(userId: string, phoneNumber: string): Promise<void> {
+  if (!supabase) {
+    return;
+  }
+
+  const { error } = await supabase.from('profiles').upsert({
+    id: userId,
+    phone_number: phoneNumber,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
 async function ensureProfile(user: User, displayName?: string): Promise<ProfileRow> {
   if (!supabase) {
     throw new Error('Supabase belum dikonfigurasi.');
@@ -225,7 +247,7 @@ async function ensureProfile(user: User, displayName?: string): Promise<ProfileR
 
   const { data, error } = await supabase
     .from('profiles')
-    .select('id, display_name, nickname, username, avatar_id, xp, wins, matches_played, created_at, last_login_at')
+    .select('id, display_name, phone_number, nickname, username, avatar_id, xp, wins, matches_played, created_at, last_login_at')
     .eq('id', user.id)
     .maybeSingle<ProfileRow>();
 
@@ -244,6 +266,7 @@ async function ensureProfile(user: User, displayName?: string): Promise<ProfileR
     .insert({
       id: user.id,
       display_name: fallbackDisplayName,
+      phone_number: user.user_metadata?.phone_number ?? null,
       nickname: fallbackDisplayName,
       username: normalizeProfileUsername(fallbackDisplayName),
       avatar_id: 'royal-1',
@@ -253,7 +276,7 @@ async function ensureProfile(user: User, displayName?: string): Promise<ProfileR
       created_at: now,
       last_login_at: now,
     })
-    .select('id, display_name, nickname, username, avatar_id, xp, wins, matches_played, created_at, last_login_at')
+    .select('id, display_name, phone_number, nickname, username, avatar_id, xp, wins, matches_played, created_at, last_login_at')
     .single<ProfileRow>();
 
   if (insertError) {

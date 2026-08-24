@@ -24,6 +24,7 @@ export interface AuthFormInput {
   readonly displayName: string;
   readonly email: string;
   readonly password: string;
+  readonly phoneNumber: string;
 }
 
 export interface AuthResult {

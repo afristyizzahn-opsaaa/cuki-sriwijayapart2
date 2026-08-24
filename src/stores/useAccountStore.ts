@@ -22,7 +22,7 @@ interface AccountStoreState {
   readonly isAuthLoading: boolean;
   initializeAuthSession: () => Promise<void>;
   registerAccount: (input: AuthFormInput) => Promise<AuthResult>;
-  loginAccount: (input: Omit<AuthFormInput, 'displayName'>) => Promise<AuthResult>;
+  loginAccount: (input: { readonly email: string; readonly password: string }) => Promise<AuthResult>;
   logoutAccount: () => Promise<void>;
   awardMatchProgress: (gameState: RuntimeGameState, result: MatchResult | null) => void;
   updateProfile: (input: { nickname: string; username: string; avatarId: string }) => Promise<void>;
@@ -83,6 +83,7 @@ export const useAccountStore = create<AccountStoreState>((set, get) => ({
           displayName: input.displayName.trim(),
           email: normalizeEmail(input.email),
           password: input.password.trim(),
+          phoneNumber: input.phoneNumber.trim(),
         });
 
         if (result.needsEmailConfirmation) {
@@ -294,7 +295,7 @@ function registerLocalAccount(
 }
 
 function loginLocalAccount(
-  input: Omit<AuthFormInput, 'displayName'>,
+  input: { readonly email: string; readonly password: string },
   get: () => AccountStoreState,
   set: (partial: Partial<AccountStoreState>) => void,
 ): AuthResult {
@@ -327,6 +328,12 @@ function validateRegistrationInput(input: AuthFormInput): AuthResult {
   }
   if (password.length < 4) {
     return { ok: false, message: 'Password minimal 4 karakter.' };
+  }
+  if (!input.phoneNumber.trim()) {
+    return { ok: false, message: 'Nomor HP wajib diisi.' };
+  }
+  if (!/^08\d{8,13}$/.test(input.phoneNumber.trim())) {
+    return { ok: false, message: 'Nomor HP tidak valid. Gunakan format 08xxxxxxxxxx.' };
   }
 
   return { ok: true, message: 'Valid.' };
