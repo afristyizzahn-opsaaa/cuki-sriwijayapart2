@@ -50,21 +50,12 @@ export const useAccountStore = create<AccountStoreState>((set, get) => ({
     try {
       const profile = await getSupabaseAuthProfile();
       if (!profile) {
-        set({
-          accounts: [],
-          activeAccountId: null,
-          activeAccount: null,
-          isAuthLoading: false,
-        });
+        persistAccounts([], null, set);
         return;
       }
       persistAccounts([profile.account], profile.account.id, set);
     } catch {
-      set({
-        accounts: [],
-        activeAccountId: null,
-        activeAccount: null,
-      });
+      persistAccounts([], null, set);
     } finally {
       set({ isAuthLoading: false });
     }
@@ -87,6 +78,7 @@ export const useAccountStore = create<AccountStoreState>((set, get) => ({
         });
 
         if (result.needsEmailConfirmation) {
+          persistAccounts(get().accounts, null, set);
           return {
             ok: true,
             message:

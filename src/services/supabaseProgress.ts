@@ -116,6 +116,9 @@ export async function loginSupabaseAccount(input: {
   if (!data.user) {
     throw new Error('Akun tidak ditemukan.');
   }
+  if (!data.session) {
+    throw new Error('Sesi autentikasi belum tersedia.');
+  }
 
   return loadSupabaseProfile(data.user);
 }
