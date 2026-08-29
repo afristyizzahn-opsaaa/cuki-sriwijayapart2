@@ -6,6 +6,7 @@ import { PageContainer } from './PageContainer';
 import { PlaySelectorOverlay } from '../PlaySelectorOverlay';
 import { Button } from '../ui/Button';
 import { useAccountStore } from '../../stores/useAccountStore';
+import { CukiLogo } from '../CukiLogo';
 
 export interface KingdomShellProps {
   readonly children: ReactNode;
@@ -32,11 +33,8 @@ export function KingdomShell({
         className="fixed left-1/2 top-4 z-50 w-[calc(100vw-1.5rem)] max-w-[1180px] -translate-x-1/2 rounded-full border border-primary-gold/25 bg-bg-dark/48 px-4 py-3 shadow-[0_18px_50px_rgba(0,0,0,0.28)] backdrop-blur-xl sm:w-[calc(100vw-3rem)] sm:px-6"
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <Link
-            className="font-display text-xl font-semibold tracking-wide text-primary-gold drop-shadow-[0_0_16px_rgba(212,175,55,0.24)]"
-            to="/home"
-          >
-            CUKI
+          <Link className="inline-flex items-center" to="/home">
+            <CukiLogo className="h-auto" variant="navbar" />
           </Link>
           <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-x-2 gap-y-2 text-[0.68rem] font-semibold uppercase tracking-[0.08em] text-surface-parchment sm:gap-x-3 sm:text-xs sm:tracking-[0.1em]">
             <NavItem to="/home">Beranda</NavItem>
@@ -47,7 +45,7 @@ export function KingdomShell({
               type="button"
               onClick={() => setShowPlaySelector(true)}
             >
-              Main Cuki
+              MAIN CUKI
             </button>
             <NavItem to="/product">Produk</NavItem>
             {activeAccount ? (

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 
 import { Button } from './ui/Button';
+import { CukiLogo } from './CukiLogo';
 import { cukiAudioManager } from '../services/cukiAudioManager';
 import { useAccountStore } from '../stores/useAccountStore';
 import type { PlayerAccount } from '../types/account';
@@ -150,6 +151,12 @@ export function GateIntro(): JSX.Element {
         }}
         onError={(event) => console.error('GATE VIDEO FAILED', event.currentTarget.currentSrc)}
       />
+
+      <div className="pointer-events-none fixed left-4 top-7 z-[3] sm:left-8 sm:top-8 lg:left-10 lg:top-9">
+        <div className={`transition duration-700 ease-out ${isPlaying ? 'opacity-80 scale-100' : 'opacity-95 scale-[0.96]'}`}>
+          <CukiLogo className="origin-top-left" variant="gate" />
+        </div>
+      </div>
 
       <div
         aria-hidden={!showEntryUI}
