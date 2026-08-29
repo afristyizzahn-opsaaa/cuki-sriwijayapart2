@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, Sparkles, XCircle } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, ChevronLeft, ChevronRight, Sparkles, XCircle } from 'lucide-react';
 
 import { KingdomShell } from '../components/layout/KingdomShell';
 import { Button } from '../components/ui/Button';
@@ -61,6 +61,7 @@ export function ArchiveDetailPage(): JSX.Element {
   const backLinkLabel = treasure.backLinkLabel ?? 'Kembali ke Treasures';
   const treasureProgressLabel = treasure.treasureProgressLabel ?? '+1 Treasure Progress';
   const achievementProgressLabel = treasure.achievementProgressLabel ?? 'Achievement Progress Updated';
+  const isCukiArchive = treasure.id === 'legacy' && Boolean(treasure.cukiSlides?.length);
 
   const submitAnswer = (): void => {
     const selectedOption = treasure.quizOptions.find((option) => option.id === selectedOptionId);
@@ -125,41 +126,45 @@ export function ArchiveDetailPage(): JSX.Element {
             </div>
           </div>
 
-          <div className="group relative min-h-[320px] overflow-hidden rounded-card border border-primary-gold/25 bg-[linear-gradient(180deg,rgba(38,22,13,0.32),rgba(10,8,7,0.88))] shadow-[inset_0_0_80px_rgba(212,175,55,0.08)]">
-            {!imageFailed && treasure.image ? (
-              <img
-                alt={treasure.imageTitle ?? treasure.title}
-                className="h-full w-full object-cover object-center opacity-90 brightness-[0.85] contrast-[1.05] sepia-[0.2] transition-transform duration-[450ms] ease-out group-hover:scale-[1.02]"
-                src={treasure.image}
-                onError={() => setImageFailed(true)}
-              />
-            ) : (
-              <div
-                aria-hidden="true"
-                className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_50%_30%,rgba(212,175,55,0.12),transparent_42%),linear-gradient(180deg,rgba(60,38,18,0.72),rgba(14,9,6,0.92))]"
-              >
-                <div className="text-center text-surface-parchment/70">
-                  <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary-gold/80">
-                    Visual Arsip
-                  </p>
+          {isCukiArchive ? (
+            <CukiArchiveCarousel slides={treasure.cukiSlides ?? []} />
+          ) : (
+            <div className="group relative min-h-[320px] overflow-hidden rounded-card border border-primary-gold/25 bg-[linear-gradient(180deg,rgba(38,22,13,0.32),rgba(10,8,7,0.88))] shadow-[inset_0_0_80px_rgba(212,175,55,0.08)]">
+              {!imageFailed && treasure.image ? (
+                <img
+                  alt={treasure.imageTitle ?? treasure.title}
+                  className="h-full w-full object-cover object-center opacity-90 brightness-[0.85] contrast-[1.05] sepia-[0.2] transition-transform duration-[450ms] ease-out group-hover:scale-[1.02]"
+                  src={treasure.image}
+                  onError={() => setImageFailed(true)}
+                />
+              ) : (
+                <div
+                  aria-hidden="true"
+                  className="flex h-full w-full items-center justify-center bg-[radial-gradient(circle_at_50%_30%,rgba(212,175,55,0.12),transparent_42%),linear-gradient(180deg,rgba(60,38,18,0.72),rgba(14,9,6,0.92))]"
+                >
+                  <div className="text-center text-surface-parchment/70">
+                    <p className="text-xs font-bold uppercase tracking-[0.24em] text-primary-gold/80">
+                      Visual Arsip
+                    </p>
+                  </div>
                 </div>
-              </div>
-            )}
-            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(25,14,8,0.08)_0%,rgba(25,14,8,0.18)_42%,rgba(17,10,6,0.74)_100%)]" />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,transparent,rgba(18,11,7,0.9))] px-5 pb-5 pt-16">
-              <p className="text-xs font-bold uppercase tracking-[0.24em] text-surface-parchment/80">
-                {treasure.imageTitle ?? `Visual ${treasure.title}`}
-              </p>
-              <p className="mt-2 max-w-sm text-sm leading-6 text-surface-parchment/72">
-                {treasure.imageDescription ?? 'Visual arsip yang merepresentasikan isi koleksi ini.'}
-              </p>
-              {treasure.imageCredit ? (
-                <p className="mt-3 text-[0.7rem] leading-5 tracking-[0.08em] text-surface-parchment/52">
-                  {treasure.imageCredit}
+              )}
+              <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(25,14,8,0.08)_0%,rgba(25,14,8,0.18)_42%,rgba(17,10,6,0.74)_100%)]" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,transparent,rgba(18,11,7,0.9))] px-5 pb-5 pt-16">
+                <p className="text-xs font-bold uppercase tracking-[0.24em] text-surface-parchment/80">
+                  {treasure.imageTitle ?? `Visual ${treasure.title}`}
                 </p>
-              ) : null}
+                <p className="mt-2 max-w-sm text-sm leading-6 text-surface-parchment/72">
+                  {treasure.imageDescription ?? 'Visual arsip yang merepresentasikan isi koleksi ini.'}
+                </p>
+                {treasure.imageCredit ? (
+                  <p className="mt-3 text-[0.7rem] leading-5 tracking-[0.08em] text-surface-parchment/52">
+                    {treasure.imageCredit}
+                  </p>
+                ) : null}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 
@@ -240,6 +245,203 @@ export function ArchiveDetailPage(): JSX.Element {
         </aside>
       </section>
     </KingdomShell>
+  );
+}
+
+function CukiArchiveCarousel({
+  slides,
+}: {
+  readonly slides: readonly {
+    readonly id: string;
+    readonly label: string;
+    readonly title: string;
+    readonly description: string;
+    readonly image: string;
+    readonly fit: 'cover' | 'contain';
+  }[];
+}): JSX.Element {
+  const slideCount = slides.length;
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const [direction, setDirection] = useState<1 | -1>(1);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const timerRef = useRef<number | null>(null);
+
+  const activeSlide = slides[activeIndex];
+
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [slides]);
+
+  useEffect(() => {
+    if (slideCount <= 1 || isPaused) {
+      return;
+    }
+
+    timerRef.current = window.setInterval(() => {
+      setDirection(1);
+      setIsAnimating(true);
+      setActiveIndex((current) => (current + 1) % slideCount);
+    }, 7000);
+
+    return () => {
+      if (timerRef.current !== null) {
+        window.clearInterval(timerRef.current);
+      }
+    };
+  }, [isPaused, slideCount]);
+
+  useEffect(() => {
+    if (!isAnimating) {
+      return;
+    }
+
+    const animationTimeout = window.setTimeout(() => {
+      setIsAnimating(false);
+    }, 520);
+
+    return () => window.clearTimeout(animationTimeout);
+  }, [activeIndex, isAnimating]);
+
+  const goToSlide = (nextIndex: number, nextDirection: 1 | -1): void => {
+    if (slideCount === 0) {
+      return;
+    }
+
+    setDirection(nextDirection);
+    setIsAnimating(true);
+    setActiveIndex((nextIndex + slideCount) % slideCount);
+  };
+
+  const goPrevious = (): void => goToSlide(activeIndex - 1, -1);
+  const goNext = (): void => goToSlide(activeIndex + 1, 1);
+
+  const handleTouchEnd = (touchEndX: number): void => {
+    if (touchStartX === null) {
+      return;
+    }
+
+    const delta = touchEndX - touchStartX;
+    if (Math.abs(delta) > 40) {
+      if (delta > 0) {
+        goPrevious();
+      } else {
+        goNext();
+      }
+    }
+
+    setTouchStartX(null);
+  };
+
+  if (slideCount === 0) {
+    return <div />;
+  }
+
+  return (
+    <section
+      aria-label="Jejak CUKI"
+      className="group relative overflow-hidden rounded-card border border-primary-gold/25 bg-[linear-gradient(180deg,rgba(44,24,13,0.92),rgba(12,8,6,0.98))] shadow-[inset_0_0_90px_rgba(212,175,55,0.08)]"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onFocusCapture={() => setIsPaused(true)}
+      onBlurCapture={() => setIsPaused(false)}
+      onTouchStart={(event) => {
+        setIsPaused(true);
+        setTouchStartX(event.touches[0]?.clientX ?? null);
+      }}
+      onTouchEnd={(event) => {
+        handleTouchEnd(event.changedTouches[0]?.clientX ?? 0);
+        setIsPaused(false);
+      }}
+    >
+      <div className="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(90deg,#D4AF37_1px,transparent_1px),linear-gradient(#D4AF37_1px,transparent_1px)] [background-size:40px_40px]" />
+      <div className="relative p-5 md:p-6">
+        <div className="max-w-2xl">
+          <p className="text-xs font-bold uppercase tracking-[0.26em] text-primary-amber">JEJAK CUKI</p>
+          <p className="mt-3 text-sm leading-7 text-surface-parchment/74 md:text-base">
+            Dari dokumentasi sejarah, pelestari, hingga dimainkan kembali.
+          </p>
+        </div>
+
+        <div className="relative mt-5 overflow-hidden rounded-[1.6rem] border border-primary-gold/20 bg-[linear-gradient(180deg,rgba(26,17,10,0.8),rgba(10,8,7,0.98))]">
+          <div className="relative aspect-[4/3] min-h-[320px] w-full sm:aspect-[16/10] lg:aspect-[21/10]">
+            {slides.map((slide, index) => {
+              const isActive = index === activeIndex;
+              const enteringFromRight = direction === 1;
+              const translateClass = isActive
+                ? 'translate-x-0 opacity-100'
+                : enteringFromRight
+                  ? '-translate-x-3 opacity-0'
+                  : 'translate-x-3 opacity-0';
+
+              return (
+                <img
+                  key={slide.id}
+                  alt={slide.title}
+                  className={`absolute inset-0 h-full w-full transition-all duration-[520ms] ease-out ${translateClass} ${
+                    slide.fit === 'contain' ? 'object-contain bg-[#100b08]' : 'object-cover'
+                  }`}
+                  src={slide.image}
+                />
+              );
+            })}
+            <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(18,10,6,0.08)_0%,rgba(18,10,6,0.2)_42%,rgba(12,8,6,0.7)_100%)]" />
+            <button
+              aria-label="Sebelumnya"
+              className="absolute left-3 top-1/2 z-20 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-primary-gold/30 bg-bg-dark/72 text-primary-gold shadow-[0_10px_28px_rgba(0,0,0,0.32)] transition hover:border-primary-gold hover:bg-bg-mahogany/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-amber"
+              type="button"
+              onClick={goPrevious}
+            >
+              <ChevronLeft aria-hidden="true" className="h-5 w-5" />
+            </button>
+            <button
+              aria-label="Berikutnya"
+              className="absolute right-3 top-1/2 z-20 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full border border-primary-gold/30 bg-bg-dark/72 text-primary-gold shadow-[0_10px_28px_rgba(0,0,0,0.32)] transition hover:border-primary-gold hover:bg-bg-mahogany/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-amber"
+              type="button"
+              onClick={goNext}
+            >
+              <ChevronRight aria-hidden="true" className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="relative border-t border-primary-gold/15 bg-[linear-gradient(180deg,rgba(26,16,10,0.85),rgba(18,11,7,0.96))] px-5 py-4 md:px-6 md:py-5">
+            <div
+              className={`transition-all duration-[520ms] ease-out ${
+                isAnimating ? 'translate-y-1 opacity-0' : 'translate-y-0 opacity-100'
+              }`}
+            >
+              <p className="text-[0.68rem] font-bold uppercase tracking-[0.24em] text-primary-amber">
+                {activeSlide?.label}
+              </p>
+              <h3 className="mt-2 font-display text-2xl font-semibold text-surface-parchment md:text-[2rem]">
+                {activeSlide?.title}
+              </h3>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-surface-parchment/76 md:text-[1.02rem] md:leading-7">
+                {activeSlide?.description}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-4 flex items-center justify-center gap-2.5">
+          {slides.map((slide, index) => (
+            <button
+              key={slide.id}
+              aria-label={`Buka slide ${index + 1}`}
+              aria-pressed={index === activeIndex}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === activeIndex
+                  ? 'w-8 bg-primary-gold shadow-[0_0_16px_rgba(212,175,55,0.45)]'
+                  : 'w-2.5 bg-surface-parchment/28 hover:bg-surface-parchment/45'
+              }`}
+              type="button"
+              onClick={() => goToSlide(index, index > activeIndex ? 1 : -1)}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 

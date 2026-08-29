@@ -2,6 +2,11 @@ import { Anchor, Crown, Dice5, Landmark, MoonStar, ScrollText, Theater } from 'l
 import type { LucideIcon } from 'lucide-react';
 
 import { saveSupabaseTreasureProgress } from '../services/supabaseProgress';
+import cukiTokohPelestari from '../assets/khazanah-cuki/tokoh-pelestari.png';
+import cukiFestivalBanner from '../assets/khazanah-cuki/banner-festival-budaya-2024.png';
+import cukiDokumenPengantar from '../assets/khazanah-cuki/dokumen-pengantar-cuki.png';
+import cukiPedomanPermainan from '../assets/khazanah-cuki/pedoman-cara-memainkan-cuki.png';
+import cukiDimainkanKembali from '../assets/khazanah-cuki/cuki-dimainkan-kembali.png';
 
 export const TREASURE_PROGRESS_KEY = 'cuki_sriwijaya_treasures_v1';
 export const TREASURE_PROGRESS_VERSION = 2;
@@ -37,6 +42,7 @@ export interface TreasureCollection {
   readonly imageDescription?: string;
   readonly imageCredit?: string;
   readonly heroDescription?: string;
+  readonly cukiSlides?: readonly CukiSlide[];
   readonly storyLabel?: string;
   readonly factsLabel?: string;
   readonly challengeLabel?: string;
@@ -45,6 +51,15 @@ export interface TreasureCollection {
   readonly backLinkLabel?: string;
   readonly treasureProgressLabel?: string;
   readonly achievementProgressLabel?: string;
+}
+
+export interface CukiSlide {
+  readonly id: string;
+  readonly label: string;
+  readonly title: string;
+  readonly description: string;
+  readonly image: string;
+  readonly fit: 'cover' | 'contain';
 }
 
 export interface TreasureProgress {
@@ -294,6 +309,53 @@ export const treasureCollections: readonly TreasureCollection[] = [
     baseProgress: 3,
     totalProgress: 8,
     icon: Dice5,
+    cukiSlides: [
+      {
+        id: 'tokoh-pelestari',
+        label: 'TOKOH PELESTARI',
+        title: 'Kms. M. Yunus Fahmi',
+        description:
+          'Ketua Paguyuban CUKI yang berperan dalam menjaga, mendokumentasikan, serta memperkenalkan kembali permainan tradisional CUKI kepada masyarakat.',
+        image: cukiTokohPelestari,
+        fit: 'cover',
+      },
+      {
+        id: 'festival-2024-banner',
+        label: 'DOKUMENTASI 2024',
+        title: 'CUKI dalam Festival Budaya Palembang',
+        description:
+          'Dokumentasi banner pengenalan permainan CUKI pada kegiatan Festival Budaya Palembang tahun 2024 sebagai bagian dari upaya memperkenalkan kembali warisan permainan tradisional kepada masyarakat.',
+        image: cukiFestivalBanner,
+        fit: 'cover',
+      },
+      {
+        id: 'arsip-pengantar',
+        label: 'ARSIP CUKI',
+        title: 'Warisan yang Didokumentasikan',
+        description:
+          'Dokumen yang disusun oleh Paguyuban CUKI memuat sejarah singkat, perlengkapan, jumlah pemain, dan ketentuan dasar permainan sebagai upaya menjaga pengetahuan tentang CUKI agar tetap dapat diwariskan.',
+        image: cukiDokumenPengantar,
+        fit: 'contain',
+      },
+      {
+        id: 'pedoman-permainan',
+        label: 'PEDOMAN PERMAINAN',
+        title: 'Cara Memainkan CUKI',
+        description:
+          'Pedoman permainan ini disusun oleh tim Paguyuban CUKI di bawah kepemimpinan Kms. M. Yunus Fahmi serta telah diketahui dan ditandatangani oleh Sultan Mahmud Badaruddin IV Jayo Wikramo, sebagai bagian dari dokumentasi pelestarian permainan CUKI.',
+        image: cukiPedomanPermainan,
+        fit: 'contain',
+      },
+      {
+        id: 'dimainkan-kembali',
+        label: 'PELESTARIAN 2024',
+        title: 'Dari Warisan Menjadi Permainan Hidup',
+        description:
+          'Dokumentasi CUKI dimainkan kembali dalam kegiatan Festival Budaya tahun 2024 yang diselenggarakan oleh Dinas Kebudayaan Kota Palembang. Momen ini memperlihatkan bahwa CUKI tidak hanya tersimpan sebagai warisan, tetapi kembali diperkenalkan dan dimainkan di tengah masyarakat.',
+        image: cukiDimainkanKembali,
+        fit: 'cover',
+      },
+    ],
     image: asset('assets/cuki/cuki-khazanah-product.png'),
     imageTitle: 'CUKI',
     imageDescription: 'Perjalanan CUKI dari warisan permainan tradisional hingga dimainkan kembali.',
