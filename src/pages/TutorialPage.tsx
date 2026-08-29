@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import { CukiBoard } from '../components/CukiBoard';
+import { PlaySelectorOverlay } from '../components/PlaySelectorOverlay';
 import { Dice } from '../components/game/Dice';
 import { KingdomShell } from '../components/layout/KingdomShell';
 import { Button } from '../components/ui/Button';
@@ -116,6 +117,7 @@ export function TutorialPage(): JSX.Element {
   const [isTutorialTaking, setIsTutorialTaking] = useState(false);
   const [tutorialOncakTakenCount, setTutorialOncakTakenCount] = useState(0);
   const [hasCompletedStepThree, setHasCompletedStepThree] = useState(false);
+  const [showPlaySelector, setShowPlaySelector] = useState(false);
   const rollTimerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
   const takeTimerRef = useRef<ReturnType<typeof window.setTimeout> | null>(null);
 
@@ -574,9 +576,7 @@ export function TutorialPage(): JSX.Element {
               Kamu telah memahami alur dasar permainan CUKI. Saatnya mencoba permainan sebenarnya.
             </p>
             <div className="flex flex-wrap items-center gap-3">
-              <Link className="inline-flex" to="/setup">
-                <Button>Mulai Permainan</Button>
-              </Link>
+              <Button onClick={() => setShowPlaySelector(true)}>Mulai Permainan</Button>
               <Button variant="secondary" onClick={resetTutorialProgress}>
                 Ulangi Latihan
               </Button>
@@ -588,12 +588,13 @@ export function TutorialPage(): JSX.Element {
             <p className="mt-2 text-sm leading-6 text-text-muted">
               Mulai pertandingan lokal dan gunakan dadu serta papan sebagai pusat setiap aksi.
             </p>
-            <Link className="mt-5 inline-flex" to="/setup">
-              <Button>Mulai permainan</Button>
-            </Link>
+            <Button className="mt-5" onClick={() => setShowPlaySelector(true)}>
+              Mulai permainan
+            </Button>
           </>
         )}
       </Card>
+      {showPlaySelector ? <PlaySelectorOverlay onClose={() => setShowPlaySelector(false)} /> : null}
     </KingdomShell>
   );
 }

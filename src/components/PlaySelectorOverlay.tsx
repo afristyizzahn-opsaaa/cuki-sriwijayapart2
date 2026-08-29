@@ -55,8 +55,8 @@ export function PlaySelectorOverlay({ onClose }: { readonly onClose: () => void 
 
         <div className="mt-7 grid gap-5 lg:grid-cols-2">
           <PlayOptionCard
-            badge="VERSI KLASIK"
-            cta="Main melalui Scratch ↗"
+            badge="MAIN DI SCRATCH"
+            cta="MAIN DI SCRATCH ↗"
             description="Mainkan CUKI dalam versi klasik yang siap dimainkan kapan saja."
             external
             href={SCRATCH_GAME_URL}
@@ -64,8 +64,8 @@ export function PlaySelectorOverlay({ onClose }: { readonly onClose: () => void 
             helper="Permainan dibuka melalui Scratch di tab baru."
           />
           <PlayOptionCard
-            badge="VERSI TERHUBUNG"
-            cta="Main di Website"
+            badge="MAIN DI WEBSITE"
+            cta="MAIN DI WEBSITE"
             description="Main langsung di website dan lanjutkan perjalanan CUKI melalui akunmu."
             href="/setup"
             icon={Gamepad2}
