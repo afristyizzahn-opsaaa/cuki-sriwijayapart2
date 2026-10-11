@@ -2,7 +2,11 @@ import type { User } from '@supabase/supabase-js';
 
 import type { PlayerAccount } from '../types/account';
 import type { RuntimeGameState } from '../types/game';
-import { supabase } from './supabaseClient';
+import {
+  clearPasswordRecoveryCallback,
+  hasPasswordRecoveryCallback,
+  supabase,
+} from './supabaseClient';
 
 const GAME_SESSION_STORAGE_KEY = 'cuki_sriwijaya_state_v1';
 const STORAGE_SCHEMA_VERSION = '1.3.0';
@@ -132,6 +136,47 @@ export async function logoutSupabaseAccount(): Promise<void> {
   if (error) {
     throw new Error(error.message);
   }
+}
+
+export async function requestSupabasePasswordReset(input: {
+  readonly email: string;
+  readonly redirectTo: string;
+}): Promise<void> {
+  if (!supabase) {
+    throw new Error('Supabase belum dikonfigurasi.');
+  }
+
+  const { error } = await supabase.auth.resetPasswordForEmail(input.email, {
+    redirectTo: input.redirectTo,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}
+
+export async function updateSupabasePassword(password: string): Promise<void> {
+  if (!supabase) {
+    throw new Error('Supabase belum dikonfigurasi.');
+  }
+  if (!hasPasswordRecoveryCallback()) {
+    throw new Error('Link reset password tidak valid atau sudah kedaluwarsa.');
+  }
+
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  if (sessionError) {
+    throw new Error(sessionError.message);
+  }
+  if (!sessionData.session) {
+    throw new Error('Link reset password tidak valid atau sudah kedaluwarsa.');
+  }
+
+  const { error } = await supabase.auth.updateUser({ password });
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  clearPasswordRecoveryCallback();
 }
 
 export async function saveSupabaseProfileProgress(account: PlayerAccount): Promise<void> {

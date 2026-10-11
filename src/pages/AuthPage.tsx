@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 
@@ -8,7 +8,12 @@ import { Card } from '../components/ui/Card';
 import { useAccountStore } from '../stores/useAccountStore';
 import { useGameStore } from '../stores/useGameStore';
 
-type AuthMode = 'login' | 'register';
+type AuthMode = 'login' | 'register' | 'forgot-password' | 'reset-password';
+
+interface AuthCallbackState {
+  readonly isRecovery: boolean;
+  readonly errorMessage: string | null;
+}
 
 export function AuthPage(): JSX.Element {
   const [searchParams] = useSearchParams();
@@ -17,10 +22,13 @@ export function AuthPage(): JSX.Element {
   const loginAccount = useAccountStore((state) => state.loginAccount);
   const logoutAccount = useAccountStore((state) => state.logoutAccount);
   const registerAccount = useAccountStore((state) => state.registerAccount);
+  const requestPasswordReset = useAccountStore((state) => state.requestPasswordReset);
+  const updatePassword = useAccountStore((state) => state.updatePassword);
   const authProvider = useAccountStore((state) => state.authProvider);
   const isAuthLoading = useAccountStore((state) => state.isAuthLoading);
+  const authCallback = useMemo(() => readAuthCallbackState(searchParams), [searchParams]);
   const [mode, setMode] = useState<AuthMode>(
-    searchParams.get('mode') === 'register' ? 'register' : 'login',
+    getInitialAuthMode(searchParams, authCallback),
   );
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
@@ -38,9 +46,16 @@ export function AuthPage(): JSX.Element {
     authProvider === 'supabase'
       ? 'Login dan progress tersambung ke Supabase.'
       : 'Mode lokal aktif sampai VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY dipasang.';
-  const submitLabel = isSubmitting ? 'Memproses...' : mode === 'register' ? 'Buat akun' : 'Masuk';
+  const submitLabel = getSubmitLabel(mode, isSubmitting);
   const passwordInputType = showPassword ? 'text' : 'password';
   const confirmPasswordInputType = showConfirmPassword ? 'text' : 'password';
+
+  useEffect(() => {
+    if (authCallback.errorMessage) {
+      setMode('login');
+      setFeedback(authCallback.errorMessage);
+    }
+  }, [authCallback.errorMessage]);
 
   const handlePhoneNumberChange = (value: string): void => {
     const digitsOnly = value.replace(/\D/g, '');
@@ -48,6 +63,14 @@ export function AuthPage(): JSX.Element {
   };
 
   const handleSubmit = async (): Promise<void> => {
+    if (mode === 'forgot-password') {
+      await handlePasswordResetRequest();
+      return;
+    }
+    if (mode === 'reset-password') {
+      await handlePasswordUpdate();
+      return;
+    }
     if (mode === 'register' && phoneNumber.trim().length === 0) {
       setFeedback('Nomor HP wajib diisi.');
       return;
@@ -78,6 +101,36 @@ export function AuthPage(): JSX.Element {
     }
   };
 
+  const handlePasswordResetRequest = async (): Promise<void> => {
+    setIsSubmitting(true);
+    try {
+      const result = await requestPasswordReset({
+        email,
+        redirectTo: getPasswordResetRedirectUrl(),
+      });
+      setFeedback(result.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handlePasswordUpdate = async (): Promise<void> => {
+    setIsSubmitting(true);
+    try {
+      const result = await updatePassword({ password, confirmPassword });
+      setFeedback(result.message);
+      if (result.ok) {
+        setPassword('');
+        setConfirmPassword('');
+        setMode('login');
+        await logoutAccount();
+        navigate('/auth', { replace: true });
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleLogout = async (): Promise<void> => {
     await logoutAccount();
     setFeedback('Akun keluar.');
@@ -95,6 +148,10 @@ export function AuthPage(): JSX.Element {
   const switchMode = (nextMode: AuthMode): void => {
     setMode(nextMode);
     setFeedback(null);
+    if (nextMode !== 'reset-password') {
+      setPassword('');
+      setConfirmPassword('');
+    }
   };
 
   const togglePasswordVisibility = (): void => {
@@ -130,7 +187,7 @@ export function AuthPage(): JSX.Element {
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary-amber">Akun CUKI</p>
-              <h1 className="mt-2 font-display text-3xl text-primary-gold">Masuk dulu sebelum main</h1>
+              <h1 className="mt-2 font-display text-3xl text-primary-gold">{getAuthTitle(mode)}</h1>
               <p className="mt-2 text-sm text-text-muted">{authDescription}</p>
             </div>
             {activeAccount ? (
@@ -165,6 +222,13 @@ export function AuthPage(): JSX.Element {
             >
               Register
             </Button>
+            <Button
+              disabled={controlsDisabled}
+              onClick={() => switchMode('forgot-password')}
+              variant={mode === 'forgot-password' ? 'primary' : 'secondary'}
+            >
+              Lupa Password
+            </Button>
           </div>
 
           <div className="mt-7 grid gap-4">
@@ -180,16 +244,19 @@ export function AuthPage(): JSX.Element {
                 />
               </label>
             ) : null}
-            <label className="grid gap-2 text-sm">
+            {mode !== 'reset-password' ? (
+              <label className="grid gap-2 text-sm">
               Email
               <input
                 className="min-h-11 rounded-button border border-primary-gold/30 bg-bg-dark-slate px-4 text-text-light outline-none ring-0 placeholder:text-text-muted focus:border-primary-amber disabled:opacity-60"
                 disabled={controlsDisabled}
                 placeholder="nama@email.com"
+                type="email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
               />
-            </label>
+              </label>
+            ) : null}
             {mode === 'register' ? (
               <label className="grid gap-2 text-sm">
                 Nomor HP
@@ -205,7 +272,8 @@ export function AuthPage(): JSX.Element {
                 />
               </label>
             ) : null}
-            <label className="grid gap-2 text-sm">
+            {mode === 'login' || mode === 'register' || mode === 'reset-password' ? (
+              <label className="grid gap-2 text-sm">
               Password
               <div className="relative">
                 <input
@@ -226,8 +294,9 @@ export function AuthPage(): JSX.Element {
                   {showPassword ? <EyeOff className="h-5 w-5" aria-hidden="true" /> : <Eye className="h-5 w-5" aria-hidden="true" />}
                 </button>
               </div>
-            </label>
-            {mode === 'register' ? (
+              </label>
+            ) : null}
+            {mode === 'register' || mode === 'reset-password' ? (
               <label className="grid gap-2 text-sm">
                 Konfirmasi Kata Sandi
                 <div className="relative">
@@ -265,6 +334,11 @@ export function AuthPage(): JSX.Element {
             <Button disabled={controlsDisabled} onClick={() => void handleSubmit()}>
               {submitLabel}
             </Button>
+            {mode === 'forgot-password' || mode === 'reset-password' ? (
+              <Button disabled={controlsDisabled} onClick={() => switchMode('login')} variant="secondary">
+                Kembali ke Login
+              </Button>
+            ) : null}
             <Button disabled={controlsDisabled} onClick={handleBack} variant="secondary">
               Kembali
             </Button>
@@ -281,4 +355,77 @@ export function AuthPage(): JSX.Element {
 
 function getAccountLevel(xp: number): number {
   return Math.floor(xp / 100) + 1;
+}
+
+function getInitialAuthMode(searchParams: URLSearchParams, callback: AuthCallbackState): AuthMode {
+  const requestedMode = searchParams.get('mode');
+  if (callback.isRecovery || requestedMode === 'reset-password') {
+    return 'reset-password';
+  }
+  if (requestedMode === 'register') {
+    return 'register';
+  }
+  if (requestedMode === 'forgot-password') {
+    return 'forgot-password';
+  }
+  return 'login';
+}
+
+function getAuthTitle(mode: AuthMode): string {
+  if (mode === 'forgot-password') {
+    return 'Reset akses akun CUKI';
+  }
+  if (mode === 'reset-password') {
+    return 'Buat password baru';
+  }
+  return 'Masuk dulu sebelum main';
+}
+
+function getSubmitLabel(mode: AuthMode, isSubmitting: boolean): string {
+  if (isSubmitting) {
+    return 'Memproses...';
+  }
+  if (mode === 'register') {
+    return 'Buat akun';
+  }
+  if (mode === 'forgot-password') {
+    return 'Kirim Link Reset';
+  }
+  if (mode === 'reset-password') {
+    return 'Simpan Password Baru';
+  }
+  return 'Masuk';
+}
+
+function getPasswordResetRedirectUrl(): string {
+  const basePath = import.meta.env.BASE_URL.endsWith('/')
+    ? import.meta.env.BASE_URL
+    : `${import.meta.env.BASE_URL}/`;
+  return `${window.location.origin}${basePath}auth?mode=reset-password`;
+}
+
+function readAuthCallbackState(searchParams: URLSearchParams): AuthCallbackState {
+  const hashParams =
+    typeof window === 'undefined'
+      ? new URLSearchParams()
+      : new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  const errorDescription =
+    hashParams.get('error_description') ??
+    searchParams.get('error_description') ??
+    hashParams.get('error') ??
+    searchParams.get('error');
+
+  return {
+    isRecovery: hashParams.get('type') === 'recovery' || searchParams.get('type') === 'recovery',
+    errorMessage: errorDescription ? decodeAuthMessage(errorDescription) : null,
+  };
+}
+
+function decodeAuthMessage(value: string): string {
+  const message = value.replace(/\+/g, ' ');
+  try {
+    return decodeURIComponent(message);
+  } catch {
+    return message;
+  }
 }

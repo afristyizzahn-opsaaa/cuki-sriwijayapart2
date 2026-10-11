@@ -7,7 +7,9 @@ import {
   loginSupabaseAccount,
   logoutSupabaseAccount,
   registerSupabaseAccount,
+  requestSupabasePasswordReset,
   saveSupabaseProfileProgress,
+  updateSupabasePassword,
 } from '../services/supabaseProgress';
 import type { AuthFormInput, AuthResult, PlayerAccount } from '../types/account';
 import type { MatchResult, PlayerState, RuntimeGameState } from '../types/game';
@@ -23,6 +25,8 @@ interface AccountStoreState {
   initializeAuthSession: () => Promise<void>;
   registerAccount: (input: AuthFormInput) => Promise<AuthResult>;
   loginAccount: (input: { readonly email: string; readonly password: string }) => Promise<AuthResult>;
+  requestPasswordReset: (input: { readonly email: string; readonly redirectTo: string }) => Promise<AuthResult>;
+  updatePassword: (input: { readonly password: string; readonly confirmPassword: string }) => Promise<AuthResult>;
   logoutAccount: () => Promise<void>;
   awardMatchProgress: (gameState: RuntimeGameState, result: MatchResult | null) => void;
   updateProfile: (input: { nickname: string; username: string; avatarId: string }) => Promise<void>;
@@ -127,6 +131,63 @@ export const useAccountStore = create<AccountStoreState>((set, get) => ({
     }
 
     return loginLocalAccount({ email, password }, get, set);
+  },
+
+  requestPasswordReset: async (input) => {
+    const email = normalizeEmail(input.email);
+    if (!isLikelyEmail(email)) {
+      return { ok: false, message: 'Email belum valid.' };
+    }
+    if (!isSupabaseConfigured()) {
+      return {
+        ok: false,
+        message: 'Reset password hanya tersedia saat Supabase Auth aktif.',
+      };
+    }
+
+    set({ isAuthLoading: true });
+    try {
+      await requestSupabasePasswordReset({ email, redirectTo: input.redirectTo });
+      return {
+        ok: true,
+        message: 'Link reset password sudah dikirim. Silakan periksa email Anda.',
+      };
+    } catch (error) {
+      return { ok: false, message: toAuthMessage(error) };
+    } finally {
+      set({ isAuthLoading: false });
+    }
+  },
+
+  updatePassword: async (input) => {
+    const password = input.password.trim();
+    const confirmPassword = input.confirmPassword.trim();
+
+    if (password.length < 4) {
+      return { ok: false, message: 'Password minimal 4 karakter.' };
+    }
+    if (password !== confirmPassword) {
+      return { ok: false, message: 'Kata sandi dan konfirmasi kata sandi harus sama.' };
+    }
+    if (!isSupabaseConfigured()) {
+      return {
+        ok: false,
+        message: 'Reset password hanya tersedia saat Supabase Auth aktif.',
+      };
+    }
+
+    set({ isAuthLoading: true });
+    try {
+      await updateSupabasePassword(password);
+      return {
+        ok: true,
+        message: 'Password berhasil diperbarui. Silakan masuk dengan password baru.',
+      };
+    } catch (error) {
+      return { ok: false, message: toAuthMessage(error) };
+    } finally {
+      set({ isAuthLoading: false });
+    }
   },
 
   logoutAccount: async () => {
